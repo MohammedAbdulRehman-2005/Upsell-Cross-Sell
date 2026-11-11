@@ -1,0 +1,25 @@
+test_id,scenario,setup,expected_result,category
+T01,Single mapped ordered SKU,Delivered order; one mapped SKU; all six targets eligible,Return six ranked unique recommendations.,Happy path
+T02,Two mapped ordered SKUs,Two distinct mapped SKUs; equal allocation,"Equal allocation (3 initial slots per source), then priority-ordered backfill if needed.",Happy path
+T03,Three mapped ordered SKUs,Three distinct mapped SKUs,"Equal allocation of 2 slots per source; M <= 6 deterministic source priority order (eligible_candidate_count desc, first_line_index asc, product_code asc).",Allocation
+T04,Four mapped ordered SKUs,Four distinct mapped SKUs,"Equal allocation of 2,2,1,1 assigned in M <= 6 deterministic source priority order (eligible_candidate_count desc, first_line_index asc, product_code asc) without quantity influencing remainder slots.",Allocation
+T05,More than six mapped ordered SKUs,"Seven distinct mapped SKUs (e.g., line 1 has fewer eligible candidates or lower quantity_sum than line 7)","No arbitrary first-six truncation; evaluate eligibility across all mapped sources first, rank by M > 6 deterministic source priority (eligible_candidate_count desc, quantity_sum desc, first_line_index asc, product_code asc), assign 1 equal initial slot to top six prioritized sources, and include all mapped sources in round-robin backfill.",Source prioritization / allocation
+T06,Repeated SKU order lines,Same SKU appears on multiple order lines,Aggregate to one source SKU; do not give it multiple base quotas; quantity_sum is used only as a source-prioritization tie-breaker when M > 6 (never influences M <= 6 remainder allocation or slot weighting) and is retained in trace.,Normalization
+T07,Purchased target exclusion,A mapped target is also in current order,Exclude purchased target regardless of source mapping rank.,Filtering
+T08,Cross-source duplicate candidate,Two source mappings contain same target SKU,Return target once; retain first deterministic provenance; backfill if needed.,Deduplication
+T09,Unavailable candidate,Candidate has available_quantity = 0,Exclude and scan next ranked candidate.,Eligibility / backfill
+T10,Inactive candidate,Candidate has is_active = false,Exclude and scan next ranked candidate.,Eligibility / backfill
+T11,Rx candidate,Candidate has is_rx = true,Always exclude; never recommend.,Safety / eligibility
+T12,Unknown catalogue metadata,Candidate metadata missing or Rx flag unknown,Fail closed for candidate; record exclusion reason.,Validation
+T13,One source lacks mapping,"One order SKU mapped, another not mapped",Use mapped source(s); redistribute quota equally across mapped sources; do not fail whole order.,Missing mapping
+T14,No source has mapping,No ordered SKU exists in mapping table,Return empty result and do not send WhatsApp message.,Missing mapping
+T15,Fewer than six eligible candidates,Only four unique eligible targets remain after filters,"Return four when eligible candidates are exhausted; do not relax filters, invent products, or invoke global bestseller fallback (future enhancement only).",Output contract
+T16,No eligible candidates,All candidates purchased/Rx/unavailable/inactive/unknown,Return empty result; do not send recommendation message.,Empty outcome
+T17,Order not delivered,Event says processing/shipped or authoritative order state not delivered,Do not compute/send recommendations.,Trigger gate
+T18,Duplicate delivered webhook,Same order/campaign delivery event received twice,Only one dispatch; second event is idempotent no-op.,Reliability
+T19,Customer opted out / no consent,Customer messaging status blocks outbound message,"Compute may be retained for audit, but do not dispatch message.",Messaging policy
+T20,"WhatsApp provider failure, acceptance & simulator selection semantics","Meta Cloud API transient error, acceptance vs webhook delivery status, and explicit simulator/missing-credential selection",Do not auto-switch to simulator on real Meta API failure; retry Meta transient failure safely and record failed/pending state; record Meta API acceptance (PROVIDER_ACCEPTED) separately from Meta webhook delivery confirmation (DELIVERED); select simulator only in explicit simulator mode or when credentials are unavailable.,Integration
+T21,Malformed order payload,"Missing order_id, invalid status, blank SKU or invalid quantity",Reject with validation error; no recommendation or dispatch.,Input validation
+T22,Mapping file malformed,"Missing header, incomplete rank pair, duplicate source key",Fail dataset load with actionable validation errors.,Dataset validation
+T23,Stable ordering,Same inputs submitted repeatedly,"Identical source priority order, product selection order, and preserved provenance (source_product_code, original mapping_rank) across repeated runs.",Determinism
+T24,Rank preservation,Eligible candidates from one source have ranks 1–6,Lower mapping rank considered before higher rank within each prioritized source.,Ranking

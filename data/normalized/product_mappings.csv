@@ -1,0 +1,421 @@
+source_product_code,source_product_name,recommendation_rank,recommended_product_code,recommended_product_name
+SAMPLE-001,Sample Gentle Face Cleanser,1,SAMPLE-002,Sample Daily Moisturizer
+SAMPLE-001,Sample Gentle Face Cleanser,2,SAMPLE-003,Sample Hydrating Face Mist
+SAMPLE-001,Sample Gentle Face Cleanser,3,SAMPLE-004,Sample Night Cream
+SAMPLE-001,Sample Gentle Face Cleanser,4,SAMPLE-005,Sample Clay Face Mask
+SAMPLE-001,Sample Gentle Face Cleanser,5,SAMPLE-006,Sample Exfoliating Scrub
+SAMPLE-001,Sample Gentle Face Cleanser,6,SAMPLE-007,Sample Nourishing Face Oil
+SAMPLE-002,Sample Daily Moisturizer,1,SAMPLE-003,Sample Hydrating Face Mist
+SAMPLE-002,Sample Daily Moisturizer,2,SAMPLE-004,Sample Night Cream
+SAMPLE-002,Sample Daily Moisturizer,3,SAMPLE-005,Sample Clay Face Mask
+SAMPLE-002,Sample Daily Moisturizer,4,SAMPLE-006,Sample Exfoliating Scrub
+SAMPLE-002,Sample Daily Moisturizer,5,SAMPLE-007,Sample Nourishing Face Oil
+SAMPLE-002,Sample Daily Moisturizer,6,SAMPLE-001,Sample Gentle Face Cleanser
+SAMPLE-003,Sample Hydrating Face Mist,1,SAMPLE-004,Sample Night Cream
+SAMPLE-003,Sample Hydrating Face Mist,2,SAMPLE-005,Sample Clay Face Mask
+SAMPLE-003,Sample Hydrating Face Mist,3,SAMPLE-006,Sample Exfoliating Scrub
+SAMPLE-003,Sample Hydrating Face Mist,4,SAMPLE-007,Sample Nourishing Face Oil
+SAMPLE-003,Sample Hydrating Face Mist,5,SAMPLE-001,Sample Gentle Face Cleanser
+SAMPLE-003,Sample Hydrating Face Mist,6,SAMPLE-002,Sample Daily Moisturizer
+SAMPLE-004,Sample Night Cream,1,SAMPLE-005,Sample Clay Face Mask
+SAMPLE-004,Sample Night Cream,2,SAMPLE-006,Sample Exfoliating Scrub
+SAMPLE-004,Sample Night Cream,3,SAMPLE-007,Sample Nourishing Face Oil
+SAMPLE-004,Sample Night Cream,4,SAMPLE-001,Sample Gentle Face Cleanser
+SAMPLE-004,Sample Night Cream,5,SAMPLE-002,Sample Daily Moisturizer
+SAMPLE-004,Sample Night Cream,6,SAMPLE-003,Sample Hydrating Face Mist
+SAMPLE-005,Sample Clay Face Mask,1,SAMPLE-006,Sample Exfoliating Scrub
+SAMPLE-005,Sample Clay Face Mask,2,SAMPLE-007,Sample Nourishing Face Oil
+SAMPLE-005,Sample Clay Face Mask,3,SAMPLE-001,Sample Gentle Face Cleanser
+SAMPLE-005,Sample Clay Face Mask,4,SAMPLE-002,Sample Daily Moisturizer
+SAMPLE-005,Sample Clay Face Mask,5,SAMPLE-003,Sample Hydrating Face Mist
+SAMPLE-005,Sample Clay Face Mask,6,SAMPLE-004,Sample Night Cream
+SAMPLE-006,Sample Exfoliating Scrub,1,SAMPLE-007,Sample Nourishing Face Oil
+SAMPLE-006,Sample Exfoliating Scrub,2,SAMPLE-001,Sample Gentle Face Cleanser
+SAMPLE-006,Sample Exfoliating Scrub,3,SAMPLE-002,Sample Daily Moisturizer
+SAMPLE-006,Sample Exfoliating Scrub,4,SAMPLE-003,Sample Hydrating Face Mist
+SAMPLE-006,Sample Exfoliating Scrub,5,SAMPLE-004,Sample Night Cream
+SAMPLE-006,Sample Exfoliating Scrub,6,SAMPLE-005,Sample Clay Face Mask
+SAMPLE-007,Sample Nourishing Face Oil,1,SAMPLE-001,Sample Gentle Face Cleanser
+SAMPLE-007,Sample Nourishing Face Oil,2,SAMPLE-002,Sample Daily Moisturizer
+SAMPLE-007,Sample Nourishing Face Oil,3,SAMPLE-003,Sample Hydrating Face Mist
+SAMPLE-007,Sample Nourishing Face Oil,4,SAMPLE-004,Sample Night Cream
+SAMPLE-007,Sample Nourishing Face Oil,5,SAMPLE-005,Sample Clay Face Mask
+SAMPLE-007,Sample Nourishing Face Oil,6,SAMPLE-006,Sample Exfoliating Scrub
+SAMPLE-008,Sample Daily Sunscreen Lotion,1,SAMPLE-010,Sample After Sun Gel
+SAMPLE-008,Sample Daily Sunscreen Lotion,2,SAMPLE-011,Sample Mineral Sunscreen
+SAMPLE-008,Sample Daily Sunscreen Lotion,3,SAMPLE-012,Sample Sun Care Lip Balm
+SAMPLE-008,Sample Daily Sunscreen Lotion,4,SAMPLE-013,Sample Sun Protection Spray
+SAMPLE-008,Sample Daily Sunscreen Lotion,5,SAMPLE-014,Sample After Sun Moisturizer
+SAMPLE-008,Sample Daily Sunscreen Lotion,6,SAMPLE-009,Sample Sun Protection Stick
+SAMPLE-009,Sample Sun Protection Stick,1,SAMPLE-011,Sample Mineral Sunscreen
+SAMPLE-009,Sample Sun Protection Stick,2,SAMPLE-012,Sample Sun Care Lip Balm
+SAMPLE-009,Sample Sun Protection Stick,3,SAMPLE-013,Sample Sun Protection Spray
+SAMPLE-009,Sample Sun Protection Stick,4,SAMPLE-014,Sample After Sun Moisturizer
+SAMPLE-009,Sample Sun Protection Stick,5,SAMPLE-008,Sample Daily Sunscreen Lotion
+SAMPLE-009,Sample Sun Protection Stick,6,SAMPLE-010,Sample After Sun Gel
+SAMPLE-010,Sample After Sun Gel,1,SAMPLE-012,Sample Sun Care Lip Balm
+SAMPLE-010,Sample After Sun Gel,2,SAMPLE-013,Sample Sun Protection Spray
+SAMPLE-010,Sample After Sun Gel,3,SAMPLE-014,Sample After Sun Moisturizer
+SAMPLE-010,Sample After Sun Gel,4,SAMPLE-008,Sample Daily Sunscreen Lotion
+SAMPLE-010,Sample After Sun Gel,5,SAMPLE-009,Sample Sun Protection Stick
+SAMPLE-010,Sample After Sun Gel,6,SAMPLE-011,Sample Mineral Sunscreen
+SAMPLE-011,Sample Mineral Sunscreen,1,SAMPLE-013,Sample Sun Protection Spray
+SAMPLE-011,Sample Mineral Sunscreen,2,SAMPLE-014,Sample After Sun Moisturizer
+SAMPLE-011,Sample Mineral Sunscreen,3,SAMPLE-008,Sample Daily Sunscreen Lotion
+SAMPLE-011,Sample Mineral Sunscreen,4,SAMPLE-009,Sample Sun Protection Stick
+SAMPLE-011,Sample Mineral Sunscreen,5,SAMPLE-010,Sample After Sun Gel
+SAMPLE-011,Sample Mineral Sunscreen,6,SAMPLE-012,Sample Sun Care Lip Balm
+SAMPLE-012,Sample Sun Care Lip Balm,1,SAMPLE-014,Sample After Sun Moisturizer
+SAMPLE-012,Sample Sun Care Lip Balm,2,SAMPLE-008,Sample Daily Sunscreen Lotion
+SAMPLE-012,Sample Sun Care Lip Balm,3,SAMPLE-009,Sample Sun Protection Stick
+SAMPLE-012,Sample Sun Care Lip Balm,4,SAMPLE-010,Sample After Sun Gel
+SAMPLE-012,Sample Sun Care Lip Balm,5,SAMPLE-011,Sample Mineral Sunscreen
+SAMPLE-012,Sample Sun Care Lip Balm,6,SAMPLE-013,Sample Sun Protection Spray
+SAMPLE-013,Sample Sun Protection Spray,1,SAMPLE-008,Sample Daily Sunscreen Lotion
+SAMPLE-013,Sample Sun Protection Spray,2,SAMPLE-009,Sample Sun Protection Stick
+SAMPLE-013,Sample Sun Protection Spray,3,SAMPLE-010,Sample After Sun Gel
+SAMPLE-013,Sample Sun Protection Spray,4,SAMPLE-011,Sample Mineral Sunscreen
+SAMPLE-013,Sample Sun Protection Spray,5,SAMPLE-012,Sample Sun Care Lip Balm
+SAMPLE-013,Sample Sun Protection Spray,6,SAMPLE-014,Sample After Sun Moisturizer
+SAMPLE-014,Sample After Sun Moisturizer,1,SAMPLE-009,Sample Sun Protection Stick
+SAMPLE-014,Sample After Sun Moisturizer,2,SAMPLE-010,Sample After Sun Gel
+SAMPLE-014,Sample After Sun Moisturizer,3,SAMPLE-011,Sample Mineral Sunscreen
+SAMPLE-014,Sample After Sun Moisturizer,4,SAMPLE-012,Sample Sun Care Lip Balm
+SAMPLE-014,Sample After Sun Moisturizer,5,SAMPLE-013,Sample Sun Protection Spray
+SAMPLE-014,Sample After Sun Moisturizer,6,SAMPLE-008,Sample Daily Sunscreen Lotion
+SAMPLE-015,Sample Daily Shampoo,1,SAMPLE-018,Sample Hair Serum
+SAMPLE-015,Sample Daily Shampoo,2,SAMPLE-019,Sample Hair Mask
+SAMPLE-015,Sample Daily Shampoo,3,SAMPLE-020,Sample Hair Oil
+SAMPLE-015,Sample Daily Shampoo,4,SAMPLE-021,Sample Detangling Spray
+SAMPLE-015,Sample Daily Shampoo,5,SAMPLE-016,Sample Hair Conditioner
+SAMPLE-015,Sample Daily Shampoo,6,SAMPLE-017,Sample Scalp Care Shampoo
+SAMPLE-016,Sample Hair Conditioner,1,SAMPLE-019,Sample Hair Mask
+SAMPLE-016,Sample Hair Conditioner,2,SAMPLE-020,Sample Hair Oil
+SAMPLE-016,Sample Hair Conditioner,3,SAMPLE-021,Sample Detangling Spray
+SAMPLE-016,Sample Hair Conditioner,4,SAMPLE-015,Sample Daily Shampoo
+SAMPLE-016,Sample Hair Conditioner,5,SAMPLE-017,Sample Scalp Care Shampoo
+SAMPLE-016,Sample Hair Conditioner,6,SAMPLE-018,Sample Hair Serum
+SAMPLE-017,Sample Scalp Care Shampoo,1,SAMPLE-020,Sample Hair Oil
+SAMPLE-017,Sample Scalp Care Shampoo,2,SAMPLE-021,Sample Detangling Spray
+SAMPLE-017,Sample Scalp Care Shampoo,3,SAMPLE-015,Sample Daily Shampoo
+SAMPLE-017,Sample Scalp Care Shampoo,4,SAMPLE-016,Sample Hair Conditioner
+SAMPLE-017,Sample Scalp Care Shampoo,5,SAMPLE-018,Sample Hair Serum
+SAMPLE-017,Sample Scalp Care Shampoo,6,SAMPLE-019,Sample Hair Mask
+SAMPLE-018,Sample Hair Serum,1,SAMPLE-021,Sample Detangling Spray
+SAMPLE-018,Sample Hair Serum,2,SAMPLE-015,Sample Daily Shampoo
+SAMPLE-018,Sample Hair Serum,3,SAMPLE-016,Sample Hair Conditioner
+SAMPLE-018,Sample Hair Serum,4,SAMPLE-017,Sample Scalp Care Shampoo
+SAMPLE-018,Sample Hair Serum,5,SAMPLE-019,Sample Hair Mask
+SAMPLE-018,Sample Hair Serum,6,SAMPLE-020,Sample Hair Oil
+SAMPLE-019,Sample Hair Mask,1,SAMPLE-015,Sample Daily Shampoo
+SAMPLE-019,Sample Hair Mask,2,SAMPLE-016,Sample Hair Conditioner
+SAMPLE-019,Sample Hair Mask,3,SAMPLE-017,Sample Scalp Care Shampoo
+SAMPLE-019,Sample Hair Mask,4,SAMPLE-018,Sample Hair Serum
+SAMPLE-019,Sample Hair Mask,5,SAMPLE-020,Sample Hair Oil
+SAMPLE-019,Sample Hair Mask,6,SAMPLE-021,Sample Detangling Spray
+SAMPLE-020,Sample Hair Oil,1,SAMPLE-016,Sample Hair Conditioner
+SAMPLE-020,Sample Hair Oil,2,SAMPLE-017,Sample Scalp Care Shampoo
+SAMPLE-020,Sample Hair Oil,3,SAMPLE-018,Sample Hair Serum
+SAMPLE-020,Sample Hair Oil,4,SAMPLE-019,Sample Hair Mask
+SAMPLE-020,Sample Hair Oil,5,SAMPLE-021,Sample Detangling Spray
+SAMPLE-020,Sample Hair Oil,6,SAMPLE-015,Sample Daily Shampoo
+SAMPLE-021,Sample Detangling Spray,1,SAMPLE-017,Sample Scalp Care Shampoo
+SAMPLE-021,Sample Detangling Spray,2,SAMPLE-018,Sample Hair Serum
+SAMPLE-021,Sample Detangling Spray,3,SAMPLE-019,Sample Hair Mask
+SAMPLE-021,Sample Detangling Spray,4,SAMPLE-020,Sample Hair Oil
+SAMPLE-021,Sample Detangling Spray,5,SAMPLE-015,Sample Daily Shampoo
+SAMPLE-021,Sample Detangling Spray,6,SAMPLE-016,Sample Hair Conditioner
+SAMPLE-022,Sample Body Wash,1,SAMPLE-026,Sample Bath Soap
+SAMPLE-022,Sample Body Wash,2,SAMPLE-027,Sample Foot Cream
+SAMPLE-022,Sample Body Wash,3,SAMPLE-028,Sample Body Butter
+SAMPLE-022,Sample Body Wash,4,SAMPLE-023,Sample Body Lotion
+SAMPLE-022,Sample Body Wash,5,SAMPLE-024,Sample Hand Cream
+SAMPLE-022,Sample Body Wash,6,SAMPLE-025,Sample Body Scrub
+SAMPLE-023,Sample Body Lotion,1,SAMPLE-027,Sample Foot Cream
+SAMPLE-023,Sample Body Lotion,2,SAMPLE-028,Sample Body Butter
+SAMPLE-023,Sample Body Lotion,3,SAMPLE-022,Sample Body Wash
+SAMPLE-023,Sample Body Lotion,4,SAMPLE-024,Sample Hand Cream
+SAMPLE-023,Sample Body Lotion,5,SAMPLE-025,Sample Body Scrub
+SAMPLE-023,Sample Body Lotion,6,SAMPLE-026,Sample Bath Soap
+SAMPLE-024,Sample Hand Cream,1,SAMPLE-028,Sample Body Butter
+SAMPLE-024,Sample Hand Cream,2,SAMPLE-022,Sample Body Wash
+SAMPLE-024,Sample Hand Cream,3,SAMPLE-023,Sample Body Lotion
+SAMPLE-024,Sample Hand Cream,4,SAMPLE-025,Sample Body Scrub
+SAMPLE-024,Sample Hand Cream,5,SAMPLE-026,Sample Bath Soap
+SAMPLE-024,Sample Hand Cream,6,SAMPLE-027,Sample Foot Cream
+SAMPLE-025,Sample Body Scrub,1,SAMPLE-022,Sample Body Wash
+SAMPLE-025,Sample Body Scrub,2,SAMPLE-023,Sample Body Lotion
+SAMPLE-025,Sample Body Scrub,3,SAMPLE-024,Sample Hand Cream
+SAMPLE-025,Sample Body Scrub,4,SAMPLE-026,Sample Bath Soap
+SAMPLE-025,Sample Body Scrub,5,SAMPLE-027,Sample Foot Cream
+SAMPLE-025,Sample Body Scrub,6,SAMPLE-028,Sample Body Butter
+SAMPLE-026,Sample Bath Soap,1,SAMPLE-023,Sample Body Lotion
+SAMPLE-026,Sample Bath Soap,2,SAMPLE-024,Sample Hand Cream
+SAMPLE-026,Sample Bath Soap,3,SAMPLE-025,Sample Body Scrub
+SAMPLE-026,Sample Bath Soap,4,SAMPLE-027,Sample Foot Cream
+SAMPLE-026,Sample Bath Soap,5,SAMPLE-028,Sample Body Butter
+SAMPLE-026,Sample Bath Soap,6,SAMPLE-022,Sample Body Wash
+SAMPLE-027,Sample Foot Cream,1,SAMPLE-024,Sample Hand Cream
+SAMPLE-027,Sample Foot Cream,2,SAMPLE-025,Sample Body Scrub
+SAMPLE-027,Sample Foot Cream,3,SAMPLE-026,Sample Bath Soap
+SAMPLE-027,Sample Foot Cream,4,SAMPLE-028,Sample Body Butter
+SAMPLE-027,Sample Foot Cream,5,SAMPLE-022,Sample Body Wash
+SAMPLE-027,Sample Foot Cream,6,SAMPLE-023,Sample Body Lotion
+SAMPLE-028,Sample Body Butter,1,SAMPLE-025,Sample Body Scrub
+SAMPLE-028,Sample Body Butter,2,SAMPLE-026,Sample Bath Soap
+SAMPLE-028,Sample Body Butter,3,SAMPLE-027,Sample Foot Cream
+SAMPLE-028,Sample Body Butter,4,SAMPLE-022,Sample Body Wash
+SAMPLE-028,Sample Body Butter,5,SAMPLE-023,Sample Body Lotion
+SAMPLE-028,Sample Body Butter,6,SAMPLE-024,Sample Hand Cream
+SAMPLE-029,Sample Lip Balm,1,SAMPLE-034,Sample Lip Butter
+SAMPLE-029,Sample Lip Balm,2,SAMPLE-035,Sample Lip Conditioner
+SAMPLE-029,Sample Lip Balm,3,SAMPLE-030,Sample Lip Scrub
+SAMPLE-029,Sample Lip Balm,4,SAMPLE-031,Sample Lip Oil
+SAMPLE-029,Sample Lip Balm,5,SAMPLE-032,Sample Lip Mask
+SAMPLE-029,Sample Lip Balm,6,SAMPLE-033,Sample Tinted Lip Balm
+SAMPLE-030,Sample Lip Scrub,1,SAMPLE-035,Sample Lip Conditioner
+SAMPLE-030,Sample Lip Scrub,2,SAMPLE-029,Sample Lip Balm
+SAMPLE-030,Sample Lip Scrub,3,SAMPLE-031,Sample Lip Oil
+SAMPLE-030,Sample Lip Scrub,4,SAMPLE-032,Sample Lip Mask
+SAMPLE-030,Sample Lip Scrub,5,SAMPLE-033,Sample Tinted Lip Balm
+SAMPLE-030,Sample Lip Scrub,6,SAMPLE-034,Sample Lip Butter
+SAMPLE-031,Sample Lip Oil,1,SAMPLE-029,Sample Lip Balm
+SAMPLE-031,Sample Lip Oil,2,SAMPLE-030,Sample Lip Scrub
+SAMPLE-031,Sample Lip Oil,3,SAMPLE-032,Sample Lip Mask
+SAMPLE-031,Sample Lip Oil,4,SAMPLE-033,Sample Tinted Lip Balm
+SAMPLE-031,Sample Lip Oil,5,SAMPLE-034,Sample Lip Butter
+SAMPLE-031,Sample Lip Oil,6,SAMPLE-035,Sample Lip Conditioner
+SAMPLE-032,Sample Lip Mask,1,SAMPLE-030,Sample Lip Scrub
+SAMPLE-032,Sample Lip Mask,2,SAMPLE-031,Sample Lip Oil
+SAMPLE-032,Sample Lip Mask,3,SAMPLE-033,Sample Tinted Lip Balm
+SAMPLE-032,Sample Lip Mask,4,SAMPLE-034,Sample Lip Butter
+SAMPLE-032,Sample Lip Mask,5,SAMPLE-035,Sample Lip Conditioner
+SAMPLE-032,Sample Lip Mask,6,SAMPLE-029,Sample Lip Balm
+SAMPLE-033,Sample Tinted Lip Balm,1,SAMPLE-031,Sample Lip Oil
+SAMPLE-033,Sample Tinted Lip Balm,2,SAMPLE-032,Sample Lip Mask
+SAMPLE-033,Sample Tinted Lip Balm,3,SAMPLE-034,Sample Lip Butter
+SAMPLE-033,Sample Tinted Lip Balm,4,SAMPLE-035,Sample Lip Conditioner
+SAMPLE-033,Sample Tinted Lip Balm,5,SAMPLE-029,Sample Lip Balm
+SAMPLE-033,Sample Tinted Lip Balm,6,SAMPLE-030,Sample Lip Scrub
+SAMPLE-034,Sample Lip Butter,1,SAMPLE-032,Sample Lip Mask
+SAMPLE-034,Sample Lip Butter,2,SAMPLE-033,Sample Tinted Lip Balm
+SAMPLE-034,Sample Lip Butter,3,SAMPLE-035,Sample Lip Conditioner
+SAMPLE-034,Sample Lip Butter,4,SAMPLE-029,Sample Lip Balm
+SAMPLE-034,Sample Lip Butter,5,SAMPLE-030,Sample Lip Scrub
+SAMPLE-034,Sample Lip Butter,6,SAMPLE-031,Sample Lip Oil
+SAMPLE-035,Sample Lip Conditioner,1,SAMPLE-033,Sample Tinted Lip Balm
+SAMPLE-035,Sample Lip Conditioner,2,SAMPLE-034,Sample Lip Butter
+SAMPLE-035,Sample Lip Conditioner,3,SAMPLE-029,Sample Lip Balm
+SAMPLE-035,Sample Lip Conditioner,4,SAMPLE-030,Sample Lip Scrub
+SAMPLE-035,Sample Lip Conditioner,5,SAMPLE-031,Sample Lip Oil
+SAMPLE-035,Sample Lip Conditioner,6,SAMPLE-032,Sample Lip Mask
+SAMPLE-036,Sample Bath Salts,1,SAMPLE-042,Sample Bath Towel
+SAMPLE-036,Sample Bath Salts,2,SAMPLE-037,Sample Bath Oil
+SAMPLE-036,Sample Bath Salts,3,SAMPLE-038,Sample Shower Gel
+SAMPLE-036,Sample Bath Salts,4,SAMPLE-039,Sample Bath Foam
+SAMPLE-036,Sample Bath Salts,5,SAMPLE-040,Sample Bath Sponge
+SAMPLE-036,Sample Bath Salts,6,SAMPLE-041,Sample Hand Soap
+SAMPLE-037,Sample Bath Oil,1,SAMPLE-036,Sample Bath Salts
+SAMPLE-037,Sample Bath Oil,2,SAMPLE-038,Sample Shower Gel
+SAMPLE-037,Sample Bath Oil,3,SAMPLE-039,Sample Bath Foam
+SAMPLE-037,Sample Bath Oil,4,SAMPLE-040,Sample Bath Sponge
+SAMPLE-037,Sample Bath Oil,5,SAMPLE-041,Sample Hand Soap
+SAMPLE-037,Sample Bath Oil,6,SAMPLE-042,Sample Bath Towel
+SAMPLE-038,Sample Shower Gel,1,SAMPLE-037,Sample Bath Oil
+SAMPLE-038,Sample Shower Gel,2,SAMPLE-039,Sample Bath Foam
+SAMPLE-038,Sample Shower Gel,3,SAMPLE-040,Sample Bath Sponge
+SAMPLE-038,Sample Shower Gel,4,SAMPLE-041,Sample Hand Soap
+SAMPLE-038,Sample Shower Gel,5,SAMPLE-042,Sample Bath Towel
+SAMPLE-038,Sample Shower Gel,6,SAMPLE-036,Sample Bath Salts
+SAMPLE-039,Sample Bath Foam,1,SAMPLE-038,Sample Shower Gel
+SAMPLE-039,Sample Bath Foam,2,SAMPLE-040,Sample Bath Sponge
+SAMPLE-039,Sample Bath Foam,3,SAMPLE-041,Sample Hand Soap
+SAMPLE-039,Sample Bath Foam,4,SAMPLE-042,Sample Bath Towel
+SAMPLE-039,Sample Bath Foam,5,SAMPLE-036,Sample Bath Salts
+SAMPLE-039,Sample Bath Foam,6,SAMPLE-037,Sample Bath Oil
+SAMPLE-040,Sample Bath Sponge,1,SAMPLE-039,Sample Bath Foam
+SAMPLE-040,Sample Bath Sponge,2,SAMPLE-041,Sample Hand Soap
+SAMPLE-040,Sample Bath Sponge,3,SAMPLE-042,Sample Bath Towel
+SAMPLE-040,Sample Bath Sponge,4,SAMPLE-036,Sample Bath Salts
+SAMPLE-040,Sample Bath Sponge,5,SAMPLE-037,Sample Bath Oil
+SAMPLE-040,Sample Bath Sponge,6,SAMPLE-038,Sample Shower Gel
+SAMPLE-041,Sample Hand Soap,1,SAMPLE-040,Sample Bath Sponge
+SAMPLE-041,Sample Hand Soap,2,SAMPLE-042,Sample Bath Towel
+SAMPLE-041,Sample Hand Soap,3,SAMPLE-036,Sample Bath Salts
+SAMPLE-041,Sample Hand Soap,4,SAMPLE-037,Sample Bath Oil
+SAMPLE-041,Sample Hand Soap,5,SAMPLE-038,Sample Shower Gel
+SAMPLE-041,Sample Hand Soap,6,SAMPLE-039,Sample Bath Foam
+SAMPLE-042,Sample Bath Towel,1,SAMPLE-041,Sample Hand Soap
+SAMPLE-042,Sample Bath Towel,2,SAMPLE-036,Sample Bath Salts
+SAMPLE-042,Sample Bath Towel,3,SAMPLE-037,Sample Bath Oil
+SAMPLE-042,Sample Bath Towel,4,SAMPLE-038,Sample Shower Gel
+SAMPLE-042,Sample Bath Towel,5,SAMPLE-039,Sample Bath Foam
+SAMPLE-042,Sample Bath Towel,6,SAMPLE-040,Sample Bath Sponge
+SAMPLE-043,Sample Soft Toothbrush,1,SAMPLE-044,Sample Toothpaste
+SAMPLE-043,Sample Soft Toothbrush,2,SAMPLE-045,Sample Mouthwash
+SAMPLE-043,Sample Soft Toothbrush,3,SAMPLE-046,Sample Dental Floss
+SAMPLE-043,Sample Soft Toothbrush,4,SAMPLE-047,Sample Tongue Cleaner
+SAMPLE-043,Sample Soft Toothbrush,5,SAMPLE-048,Sample Travel Toothbrush
+SAMPLE-043,Sample Soft Toothbrush,6,SAMPLE-049,Sample Toothbrush Case
+SAMPLE-044,Sample Toothpaste,1,SAMPLE-045,Sample Mouthwash
+SAMPLE-044,Sample Toothpaste,2,SAMPLE-046,Sample Dental Floss
+SAMPLE-044,Sample Toothpaste,3,SAMPLE-047,Sample Tongue Cleaner
+SAMPLE-044,Sample Toothpaste,4,SAMPLE-048,Sample Travel Toothbrush
+SAMPLE-044,Sample Toothpaste,5,SAMPLE-049,Sample Toothbrush Case
+SAMPLE-044,Sample Toothpaste,6,SAMPLE-043,Sample Soft Toothbrush
+SAMPLE-045,Sample Mouthwash,1,SAMPLE-046,Sample Dental Floss
+SAMPLE-045,Sample Mouthwash,2,SAMPLE-047,Sample Tongue Cleaner
+SAMPLE-045,Sample Mouthwash,3,SAMPLE-048,Sample Travel Toothbrush
+SAMPLE-045,Sample Mouthwash,4,SAMPLE-049,Sample Toothbrush Case
+SAMPLE-045,Sample Mouthwash,5,SAMPLE-043,Sample Soft Toothbrush
+SAMPLE-045,Sample Mouthwash,6,SAMPLE-044,Sample Toothpaste
+SAMPLE-046,Sample Dental Floss,1,SAMPLE-047,Sample Tongue Cleaner
+SAMPLE-046,Sample Dental Floss,2,SAMPLE-048,Sample Travel Toothbrush
+SAMPLE-046,Sample Dental Floss,3,SAMPLE-049,Sample Toothbrush Case
+SAMPLE-046,Sample Dental Floss,4,SAMPLE-043,Sample Soft Toothbrush
+SAMPLE-046,Sample Dental Floss,5,SAMPLE-044,Sample Toothpaste
+SAMPLE-046,Sample Dental Floss,6,SAMPLE-045,Sample Mouthwash
+SAMPLE-047,Sample Tongue Cleaner,1,SAMPLE-048,Sample Travel Toothbrush
+SAMPLE-047,Sample Tongue Cleaner,2,SAMPLE-049,Sample Toothbrush Case
+SAMPLE-047,Sample Tongue Cleaner,3,SAMPLE-043,Sample Soft Toothbrush
+SAMPLE-047,Sample Tongue Cleaner,4,SAMPLE-044,Sample Toothpaste
+SAMPLE-047,Sample Tongue Cleaner,5,SAMPLE-045,Sample Mouthwash
+SAMPLE-047,Sample Tongue Cleaner,6,SAMPLE-046,Sample Dental Floss
+SAMPLE-048,Sample Travel Toothbrush,1,SAMPLE-049,Sample Toothbrush Case
+SAMPLE-048,Sample Travel Toothbrush,2,SAMPLE-043,Sample Soft Toothbrush
+SAMPLE-048,Sample Travel Toothbrush,3,SAMPLE-044,Sample Toothpaste
+SAMPLE-048,Sample Travel Toothbrush,4,SAMPLE-045,Sample Mouthwash
+SAMPLE-048,Sample Travel Toothbrush,5,SAMPLE-046,Sample Dental Floss
+SAMPLE-048,Sample Travel Toothbrush,6,SAMPLE-047,Sample Tongue Cleaner
+SAMPLE-049,Sample Toothbrush Case,1,SAMPLE-043,Sample Soft Toothbrush
+SAMPLE-049,Sample Toothbrush Case,2,SAMPLE-044,Sample Toothpaste
+SAMPLE-049,Sample Toothbrush Case,3,SAMPLE-045,Sample Mouthwash
+SAMPLE-049,Sample Toothbrush Case,4,SAMPLE-046,Sample Dental Floss
+SAMPLE-049,Sample Toothbrush Case,5,SAMPLE-047,Sample Tongue Cleaner
+SAMPLE-049,Sample Toothbrush Case,6,SAMPLE-048,Sample Travel Toothbrush
+SAMPLE-050,Sample Hand Wash,1,SAMPLE-052,Sample Nail Brush
+SAMPLE-050,Sample Hand Wash,2,SAMPLE-053,Sample Cuticle Oil
+SAMPLE-050,Sample Hand Wash,3,SAMPLE-054,Sample Hand Sanitizer
+SAMPLE-050,Sample Hand Wash,4,SAMPLE-055,Sample Hand Balm
+SAMPLE-050,Sample Hand Wash,5,SAMPLE-056,Sample Nail File
+SAMPLE-050,Sample Hand Wash,6,SAMPLE-051,Sample Hand Lotion
+SAMPLE-051,Sample Hand Lotion,1,SAMPLE-053,Sample Cuticle Oil
+SAMPLE-051,Sample Hand Lotion,2,SAMPLE-054,Sample Hand Sanitizer
+SAMPLE-051,Sample Hand Lotion,3,SAMPLE-055,Sample Hand Balm
+SAMPLE-051,Sample Hand Lotion,4,SAMPLE-056,Sample Nail File
+SAMPLE-051,Sample Hand Lotion,5,SAMPLE-050,Sample Hand Wash
+SAMPLE-051,Sample Hand Lotion,6,SAMPLE-052,Sample Nail Brush
+SAMPLE-052,Sample Nail Brush,1,SAMPLE-054,Sample Hand Sanitizer
+SAMPLE-052,Sample Nail Brush,2,SAMPLE-055,Sample Hand Balm
+SAMPLE-052,Sample Nail Brush,3,SAMPLE-056,Sample Nail File
+SAMPLE-052,Sample Nail Brush,4,SAMPLE-050,Sample Hand Wash
+SAMPLE-052,Sample Nail Brush,5,SAMPLE-051,Sample Hand Lotion
+SAMPLE-052,Sample Nail Brush,6,SAMPLE-053,Sample Cuticle Oil
+SAMPLE-053,Sample Cuticle Oil,1,SAMPLE-055,Sample Hand Balm
+SAMPLE-053,Sample Cuticle Oil,2,SAMPLE-056,Sample Nail File
+SAMPLE-053,Sample Cuticle Oil,3,SAMPLE-050,Sample Hand Wash
+SAMPLE-053,Sample Cuticle Oil,4,SAMPLE-051,Sample Hand Lotion
+SAMPLE-053,Sample Cuticle Oil,5,SAMPLE-052,Sample Nail Brush
+SAMPLE-053,Sample Cuticle Oil,6,SAMPLE-054,Sample Hand Sanitizer
+SAMPLE-054,Sample Hand Sanitizer,1,SAMPLE-056,Sample Nail File
+SAMPLE-054,Sample Hand Sanitizer,2,SAMPLE-050,Sample Hand Wash
+SAMPLE-054,Sample Hand Sanitizer,3,SAMPLE-051,Sample Hand Lotion
+SAMPLE-054,Sample Hand Sanitizer,4,SAMPLE-052,Sample Nail Brush
+SAMPLE-054,Sample Hand Sanitizer,5,SAMPLE-053,Sample Cuticle Oil
+SAMPLE-054,Sample Hand Sanitizer,6,SAMPLE-055,Sample Hand Balm
+SAMPLE-055,Sample Hand Balm,1,SAMPLE-050,Sample Hand Wash
+SAMPLE-055,Sample Hand Balm,2,SAMPLE-051,Sample Hand Lotion
+SAMPLE-055,Sample Hand Balm,3,SAMPLE-052,Sample Nail Brush
+SAMPLE-055,Sample Hand Balm,4,SAMPLE-053,Sample Cuticle Oil
+SAMPLE-055,Sample Hand Balm,5,SAMPLE-054,Sample Hand Sanitizer
+SAMPLE-055,Sample Hand Balm,6,SAMPLE-056,Sample Nail File
+SAMPLE-056,Sample Nail File,1,SAMPLE-051,Sample Hand Lotion
+SAMPLE-056,Sample Nail File,2,SAMPLE-052,Sample Nail Brush
+SAMPLE-056,Sample Nail File,3,SAMPLE-053,Sample Cuticle Oil
+SAMPLE-056,Sample Nail File,4,SAMPLE-054,Sample Hand Sanitizer
+SAMPLE-056,Sample Nail File,5,SAMPLE-055,Sample Hand Balm
+SAMPLE-056,Sample Nail File,6,SAMPLE-050,Sample Hand Wash
+SAMPLE-057,Sample Foot Wash,1,SAMPLE-060,Sample Foot Balm
+SAMPLE-057,Sample Foot Wash,2,SAMPLE-061,Sample Foot File
+SAMPLE-057,Sample Foot Wash,3,SAMPLE-062,Sample Cotton Socks
+SAMPLE-057,Sample Foot Wash,4,SAMPLE-063,Sample Foot Soak
+SAMPLE-057,Sample Foot Wash,5,SAMPLE-058,Sample Foot Lotion
+SAMPLE-057,Sample Foot Wash,6,SAMPLE-059,Sample Foot Scrub
+SAMPLE-058,Sample Foot Lotion,1,SAMPLE-061,Sample Foot File
+SAMPLE-058,Sample Foot Lotion,2,SAMPLE-062,Sample Cotton Socks
+SAMPLE-058,Sample Foot Lotion,3,SAMPLE-063,Sample Foot Soak
+SAMPLE-058,Sample Foot Lotion,4,SAMPLE-057,Sample Foot Wash
+SAMPLE-058,Sample Foot Lotion,5,SAMPLE-059,Sample Foot Scrub
+SAMPLE-058,Sample Foot Lotion,6,SAMPLE-060,Sample Foot Balm
+SAMPLE-059,Sample Foot Scrub,1,SAMPLE-062,Sample Cotton Socks
+SAMPLE-059,Sample Foot Scrub,2,SAMPLE-063,Sample Foot Soak
+SAMPLE-059,Sample Foot Scrub,3,SAMPLE-057,Sample Foot Wash
+SAMPLE-059,Sample Foot Scrub,4,SAMPLE-058,Sample Foot Lotion
+SAMPLE-059,Sample Foot Scrub,5,SAMPLE-060,Sample Foot Balm
+SAMPLE-059,Sample Foot Scrub,6,SAMPLE-061,Sample Foot File
+SAMPLE-060,Sample Foot Balm,1,SAMPLE-063,Sample Foot Soak
+SAMPLE-060,Sample Foot Balm,2,SAMPLE-057,Sample Foot Wash
+SAMPLE-060,Sample Foot Balm,3,SAMPLE-058,Sample Foot Lotion
+SAMPLE-060,Sample Foot Balm,4,SAMPLE-059,Sample Foot Scrub
+SAMPLE-060,Sample Foot Balm,5,SAMPLE-061,Sample Foot File
+SAMPLE-060,Sample Foot Balm,6,SAMPLE-062,Sample Cotton Socks
+SAMPLE-061,Sample Foot File,1,SAMPLE-057,Sample Foot Wash
+SAMPLE-061,Sample Foot File,2,SAMPLE-058,Sample Foot Lotion
+SAMPLE-061,Sample Foot File,3,SAMPLE-059,Sample Foot Scrub
+SAMPLE-061,Sample Foot File,4,SAMPLE-060,Sample Foot Balm
+SAMPLE-061,Sample Foot File,5,SAMPLE-062,Sample Cotton Socks
+SAMPLE-061,Sample Foot File,6,SAMPLE-063,Sample Foot Soak
+SAMPLE-062,Sample Cotton Socks,1,SAMPLE-058,Sample Foot Lotion
+SAMPLE-062,Sample Cotton Socks,2,SAMPLE-059,Sample Foot Scrub
+SAMPLE-062,Sample Cotton Socks,3,SAMPLE-060,Sample Foot Balm
+SAMPLE-062,Sample Cotton Socks,4,SAMPLE-061,Sample Foot File
+SAMPLE-062,Sample Cotton Socks,5,SAMPLE-063,Sample Foot Soak
+SAMPLE-062,Sample Cotton Socks,6,SAMPLE-057,Sample Foot Wash
+SAMPLE-063,Sample Foot Soak,1,SAMPLE-059,Sample Foot Scrub
+SAMPLE-063,Sample Foot Soak,2,SAMPLE-060,Sample Foot Balm
+SAMPLE-063,Sample Foot Soak,3,SAMPLE-061,Sample Foot File
+SAMPLE-063,Sample Foot Soak,4,SAMPLE-062,Sample Cotton Socks
+SAMPLE-063,Sample Foot Soak,5,SAMPLE-057,Sample Foot Wash
+SAMPLE-063,Sample Foot Soak,6,SAMPLE-058,Sample Foot Lotion
+SAMPLE-064,Sample Travel Toiletry Bag,1,SAMPLE-068,Sample Travel Face Towel
+SAMPLE-064,Sample Travel Toiletry Bag,2,SAMPLE-069,Sample Travel Mirror
+SAMPLE-064,Sample Travel Toiletry Bag,3,SAMPLE-070,Sample Travel Hand Wash
+SAMPLE-064,Sample Travel Toiletry Bag,4,SAMPLE-065,Sample Travel Soap Case
+SAMPLE-064,Sample Travel Toiletry Bag,5,SAMPLE-066,Sample Travel Bottle Set
+SAMPLE-064,Sample Travel Toiletry Bag,6,SAMPLE-067,Sample Travel Comb
+SAMPLE-065,Sample Travel Soap Case,1,SAMPLE-069,Sample Travel Mirror
+SAMPLE-065,Sample Travel Soap Case,2,SAMPLE-070,Sample Travel Hand Wash
+SAMPLE-065,Sample Travel Soap Case,3,SAMPLE-064,Sample Travel Toiletry Bag
+SAMPLE-065,Sample Travel Soap Case,4,SAMPLE-066,Sample Travel Bottle Set
+SAMPLE-065,Sample Travel Soap Case,5,SAMPLE-067,Sample Travel Comb
+SAMPLE-065,Sample Travel Soap Case,6,SAMPLE-068,Sample Travel Face Towel
+SAMPLE-066,Sample Travel Bottle Set,1,SAMPLE-070,Sample Travel Hand Wash
+SAMPLE-066,Sample Travel Bottle Set,2,SAMPLE-064,Sample Travel Toiletry Bag
+SAMPLE-066,Sample Travel Bottle Set,3,SAMPLE-065,Sample Travel Soap Case
+SAMPLE-066,Sample Travel Bottle Set,4,SAMPLE-067,Sample Travel Comb
+SAMPLE-066,Sample Travel Bottle Set,5,SAMPLE-068,Sample Travel Face Towel
+SAMPLE-066,Sample Travel Bottle Set,6,SAMPLE-069,Sample Travel Mirror
+SAMPLE-067,Sample Travel Comb,1,SAMPLE-064,Sample Travel Toiletry Bag
+SAMPLE-067,Sample Travel Comb,2,SAMPLE-065,Sample Travel Soap Case
+SAMPLE-067,Sample Travel Comb,3,SAMPLE-066,Sample Travel Bottle Set
+SAMPLE-067,Sample Travel Comb,4,SAMPLE-068,Sample Travel Face Towel
+SAMPLE-067,Sample Travel Comb,5,SAMPLE-069,Sample Travel Mirror
+SAMPLE-067,Sample Travel Comb,6,SAMPLE-070,Sample Travel Hand Wash
+SAMPLE-068,Sample Travel Face Towel,1,SAMPLE-065,Sample Travel Soap Case
+SAMPLE-068,Sample Travel Face Towel,2,SAMPLE-066,Sample Travel Bottle Set
+SAMPLE-068,Sample Travel Face Towel,3,SAMPLE-067,Sample Travel Comb
+SAMPLE-068,Sample Travel Face Towel,4,SAMPLE-069,Sample Travel Mirror
+SAMPLE-068,Sample Travel Face Towel,5,SAMPLE-070,Sample Travel Hand Wash
+SAMPLE-068,Sample Travel Face Towel,6,SAMPLE-064,Sample Travel Toiletry Bag
+SAMPLE-069,Sample Travel Mirror,1,SAMPLE-066,Sample Travel Bottle Set
+SAMPLE-069,Sample Travel Mirror,2,SAMPLE-067,Sample Travel Comb
+SAMPLE-069,Sample Travel Mirror,3,SAMPLE-068,Sample Travel Face Towel
+SAMPLE-069,Sample Travel Mirror,4,SAMPLE-070,Sample Travel Hand Wash
+SAMPLE-069,Sample Travel Mirror,5,SAMPLE-064,Sample Travel Toiletry Bag
+SAMPLE-069,Sample Travel Mirror,6,SAMPLE-065,Sample Travel Soap Case
+SAMPLE-070,Sample Travel Hand Wash,1,SAMPLE-067,Sample Travel Comb
+SAMPLE-070,Sample Travel Hand Wash,2,SAMPLE-068,Sample Travel Face Towel
+SAMPLE-070,Sample Travel Hand Wash,3,SAMPLE-069,Sample Travel Mirror
+SAMPLE-070,Sample Travel Hand Wash,4,SAMPLE-064,Sample Travel Toiletry Bag
+SAMPLE-070,Sample Travel Hand Wash,5,SAMPLE-065,Sample Travel Soap Case
+SAMPLE-070,Sample Travel Hand Wash,6,SAMPLE-066,Sample Travel Bottle Set

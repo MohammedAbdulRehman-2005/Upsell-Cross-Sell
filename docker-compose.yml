@@ -1,0 +1,52 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: plural_upsell_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-plural_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-plural_local_dev_pw}
+      POSTGRES_DB: ${POSTGRES_DB:-plural_upsell}
+    ports:
+      - "${POSTGRES_PORT:-5433}:5432"
+    volumes:
+      - plural_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-plural_user} -d $${POSTGRES_DB:-plural_upsell}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: plural_upsell_backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      APP_NAME: ${APP_NAME:-Plural Upsell & Cross-Sell Service}
+      APP_VERSION: ${APP_VERSION:-0.2.0}
+      ENVIRONMENT: ${ENVIRONMENT:-development}
+      DEBUG: ${DEBUG:-false}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: ${POSTGRES_USER:-plural_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-plural_local_dev_pw}
+      POSTGRES_DB: ${POSTGRES_DB:-plural_upsell}
+      NORMALIZED_MAPPINGS_PATH: /app/data/normalized/product_mappings.json
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health/ready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+volumes:
+  plural_postgres_data:

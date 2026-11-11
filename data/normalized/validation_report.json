@@ -1,0 +1,25 @@
+{
+  "source_file": "Business_A_Synthetic_Product_Mapping_No_Quantity.xlsx",
+  "source_sheet": "Sample Product Mapping",
+  "source_sha256": "9660c7f20b55aba8196eedf2eb40b732b1814eb2b56bc5ec7417fcfec96f0d83",
+  "header_count": 14,
+  "data_rows": 70,
+  "unique_key_product_codes": 70,
+  "recommendation_entries": 420,
+  "unique_recommendation_target_codes": 70,
+  "blank_key_fields": 0,
+  "blank_recommendation_fields": 0,
+  "duplicate_key_codes": 0,
+  "duplicate_recommendations_within_row": 0,
+  "self_recommendations": 0,
+  "conflicting_product_names": 0,
+  "targets_missing_key_record": 0,
+  "validation_errors": [],
+  "validation_status": "PASS",
+  "limitations": [
+    "No ordered quantities are present in this workbook.",
+    "No product category or Rx flag is present.",
+    "No inventory, stock, active/inactive, price, image, or product URL fields are present.",
+    "Mapping positions 1-6 are supplied ranking positions, not observed co-purchase counts or probabilities."
+  ]
+}
