@@ -13,12 +13,13 @@ from fastapi.testclient import TestClient
 
 
 def test_inbox_dom_elements_for_collapsible_profile(client: TestClient) -> None:
-    """Requirement 1 & 3: Container has required IDs and backdrop for collapsible drawer."""
+    """Requirement 1 & 3: Container has required IDs, backdrop, and default profile-closed state."""
     resp = client.get("/simulator")
     assert resp.status_code == 200
     html = resp.text
 
     assert 'id="inbox-container"' in html
+    assert 'class="inbox-container profile-closed"' in html
     assert 'id="inbox-left"' in html
     assert 'id="inbox-center"' in html
     assert 'id="inbox-right-drawer"' in html
@@ -54,11 +55,12 @@ def test_inbox_css_collapsible_and_grid_rules(client: TestClient) -> None:
 
 
 def test_inbox_js_toggle_profile_functionality(client: TestClient) -> None:
-    """Requirement 1 & 8: JavaScript exposes toggleProfilePanel and state management."""
+    """Requirement 1 & 8: JavaScript exposes toggleProfilePanel and default hidden state."""
     resp = client.get("/static/js/app.js")
     assert resp.status_code == 200
     js = resp.text
 
+    assert "isProfileOpen: false" in js
     assert "toggleProfilePanel" in js
     assert "btn-toggle-profile" in js
     assert "btn-close-drawer" in js

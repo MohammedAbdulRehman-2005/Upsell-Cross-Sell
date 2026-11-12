@@ -22,7 +22,7 @@ const state = {
   campaignStatusFilter: 'ALL',
   campaignSearchQuery: '',
   productSearchQuery: '',
-  isProfileOpen: localStorage.getItem('inbox_profile_open') !== 'false',
+  isProfileOpen: false,
 };
 
 // Utilities
