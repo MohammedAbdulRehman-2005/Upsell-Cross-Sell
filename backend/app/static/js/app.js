@@ -783,9 +783,14 @@ async function selectInboxCampaign(campaignId) {
     const msgs = detail.simulator_messages || [];
     const provenanceBanner = `
       <div class="chat-provenance-banner">
-        <div>
+        <div style="display:flex;align-items:center;flex-wrap:wrap;gap:6px;">
           <strong>Delivered Order:</strong> <code>${esc(detail.external_order_id)}</code> &bull;
-          <strong>Purchased Items:</strong> ${(detail.source_items || []).map((i) => `<span class="tag-sku-purchased">${esc(i.sku_code)}</span>`).join('') || 'None'}
+          <strong>Purchased Items:</strong> ${(detail.source_items || []).map((i) => `
+            <span class="tag-sku-purchased" title="SKU: ${esc(i.sku_code)} &bull; Quantity: ${i.quantity || 1}">
+              ${(i.product_name && i.product_name !== i.sku_code) ? `<span class="tag-product-name">${esc(i.product_name)}</span>` : ''}
+              <span class="tag-sku-badge">${esc(i.sku_code)}${i.quantity > 1 ? ` &times;${i.quantity}` : ''}</span>
+            </span>
+          `).join('') || 'None'}
         </div>
         <div>
           <span class="badge badge-simulated">POST-DELIVERY UPSELL</span>
@@ -825,7 +830,13 @@ async function selectInboxCampaign(campaignId) {
                 <div class="rec-card-chat">
                   <div class="rec-card-title">${card.slot_number}. ${esc(card.product_name)}</div>
                   <div class="rec-card-sub">SKU: ${esc(card.product_code)}${card.unit_price ? ' &bull; ₹' + Number(card.unit_price).toFixed(2) : ''}</div>
-                  ${card.source_product_code ? `<div class="badge-lineage">Cross-sell for purchased <strong>${esc(card.source_product_code)}</strong> (Rank #${card.source_rank || '1'})</div>` : '<div class="badge-lineage">Personalized cross-sell for order</div>'}
+                  ${card.source_product_code ? (() => {
+                    const srcItem = (detail.source_items || []).find((s) => s.sku_code === card.source_product_code);
+                    const srcName = srcItem && srcItem.product_name && srcItem.product_name !== card.source_product_code
+                      ? `${esc(srcItem.product_name)} (${esc(card.source_product_code)})`
+                      : esc(card.source_product_code);
+                    return `<div class="badge-lineage">Cross-sell for purchased <strong>${srcName}</strong> (Rank #${card.source_rank || '1'})</div>`;
+                  })() : '<div class="badge-lineage">Personalized cross-sell for order</div>'}
                   <div class="rec-card-actions">
                     <button class="btn-card-action" onclick="sendInteraction('${detail.campaign_id}', 'VIEW_RECOMMENDATION', '${esc(card.product_code)}')">View Details</button>
                     <button class="btn-card-action" style="background:#dcfce7;border-color:#86efac;color:#166534;" onclick="sendInteraction('${detail.campaign_id}', 'INTERESTED', '${esc(card.product_code)}')">Interested</button>
