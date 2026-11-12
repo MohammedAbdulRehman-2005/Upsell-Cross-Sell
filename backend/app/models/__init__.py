@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from app.models.customer import Customer
+from app.models.demo_delivery import DemoDeliveryEvent
 from app.models.enums import (
     CampaignSuppressionReason,
     CatalogueMetadataSource,
@@ -19,12 +20,14 @@ from app.models.order import Order, OrderLineItem
 from app.models.product import Product, ProductMapping
 from app.models.simulator import SimulatorMessage
 from app.models.webhook import WebhookEvent
+from app.models.whatsapp_message import WhatsAppMessage
 
 __all__ = [
     "CampaignSuppressionReason",
     "CatalogueMetadataSource",
     "Customer",
     "DeliveryEventOutcome",
+    "DemoDeliveryEvent",
     "MessageDeliveryStatus",
     "MessageLog",
     "MessagingProvider",
@@ -39,4 +42,5 @@ __all__ = [
     "WebhookEvent",
     "WebhookEventType",
     "WebhookProcessingStatus",
+    "WhatsAppMessage",
 ]

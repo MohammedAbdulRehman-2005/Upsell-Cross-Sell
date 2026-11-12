@@ -92,3 +92,15 @@ See [docs/frontend_dashboard.md](docs/frontend_dashboard.md).
 - Navigate across **Overview**, **Campaigns**, **WhatsApp Inbox**, **Orders & Customers**, **Product Catalogue**, and **Settings**.
 - All interactive customer actions (e.g. *View Details*, *Interested*, *Pass*) and campaign dispatches persist directly to the PostgreSQL database.
 
+## Stage 8 — Ecommerce Storefront + Automated Delivery Journey + Real WhatsApp Cloud API
+See [docs/stage8_storefront_and_meta_journey.md](docs/stage8_storefront_and_meta_journey.md).
+- **Customer Storefront (`/store`)**: Live responsive storefront browsing all 70 catalogue products with real-time category filtering, search, and dynamic cart drawer.
+- **Strict Compliance & Consent**: Checkout enforces strict E.164 phone numbers (`^\+[1-9]\d{7,14}$`) and an explicit, unchecked-by-default WhatsApp marketing opt-in checkbox with full provenance recording (`consent_source = "STOREFRONT_CHECKOUT"`, `consent_recorded_at`).
+- **Automated Demo Delivery Progression**: Background scheduler and worker (`DemoDeliveryWorker`) progresses demo orders through `PLACED -> CONFIRMED -> PACKED -> OUT_FOR_DELIVERY -> DELIVERED` across a configurable 10–15s window (default 12s, gated by `DEMO_DELIVERY_ENABLED`).
+- **Post-Delivery Recommendation Trigger**: Reaching `DELIVERED` automatically triggers Stage 5 event orchestration and Stage 6 WhatsApp dispatch coordinator without holding database locks across HTTP.
+- **Inbound Customer WhatsApp Replies**: Meta webhook routes ingest customer messages (`messages[]`), deduplicate by `wamid`, persist in `whatsapp_messages`, and execute deterministic keyword actions:
+  - `STOP` / `UNSUBSCRIBE`: Sets `customer.opted_out = True`, `whatsapp_opt_in = False`, records `opt_out_recorded_at`, suppresses future campaigns, and dispatches confirmation.
+  - `START` / `RESUBSCRIBE`: Resubscribes customer with fresh consent audit record.
+  - `HELP` / `SUPPORT`: Dispatches customer support assistance information.
+- **161 Automated Tests**: 100% test pass rate on host and Docker.
+

@@ -21,6 +21,10 @@ class CustomerRepository:
         stmt = select(Customer).where(Customer.external_customer_id == external_customer_id)
         return self.session.scalar(stmt)
 
+    def get_by_phone(self, phone_number: str) -> Customer | None:
+        stmt = select(Customer).where(Customer.phone_number == phone_number)
+        return self.session.scalar(stmt)
+
     def list_all(self, limit: int = 100, offset: int = 0) -> list[Customer]:
         stmt = select(Customer).order_by(Customer.id).offset(offset).limit(limit)
         return list(self.session.scalars(stmt).all())

@@ -5,6 +5,7 @@ from datetime import datetime
 from typing import TYPE_CHECKING
 
 from sqlalchemy import (
+    Boolean,
     CheckConstraint,
     DateTime,
     ForeignKey,
@@ -52,6 +53,22 @@ class Order(TimestampMixin, Base):
     )
     delivered_at: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True),
+        nullable=True,
+    )
+    order_source: Mapped[str] = mapped_column(
+        String(32),
+        default="STOREFRONT",
+        server_default="STOREFRONT",
+        nullable=False,
+    )
+    is_demo_order: Mapped[bool] = mapped_column(
+        Boolean,
+        default=False,
+        server_default="false",
+        nullable=False,
+    )
+    delivery_address: Mapped[str | None] = mapped_column(
+        String(512),
         nullable=True,
     )
 

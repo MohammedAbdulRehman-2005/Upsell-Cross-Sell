@@ -1,8 +1,10 @@
-﻿"""Meta WhatsApp Cloud API webhook verification and status progression service."""
+"""Meta WhatsApp Cloud API webhook verification and status progression service."""
 from __future__ import annotations
 
 import hashlib
 import hmac
+import logging
+import time
 from typing import Any
 
 from datetime import datetime, timezone
@@ -11,6 +13,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.core.config import Settings, get_settings
+from app.models.customer import Customer
 from app.models.enums import (
     MessageDeliveryStatus,
     MessagingProvider,
@@ -18,10 +21,13 @@ from app.models.enums import (
     WebhookProcessingStatus,
 )
 from app.models.webhook import WebhookEvent
+from app.models.whatsapp_message import WhatsAppMessage
 from app.repositories.message_repository import MessageLogRepository
 from app.schemas.whatsapp import MetaStatusWebhookResponseSchema
-from app.services.whatsapp.models import ParsedWebhookStatusUpdate
-from app.services.whatsapp.providers import parse_meta_status_entries
+from app.services.whatsapp.models import OutboundTextMessageRequest, ParsedWebhookStatusUpdate
+from app.services.whatsapp.providers import get_whatsapp_provider, parse_meta_status_entries
+
+logger = logging.getLogger(__name__)
 
 # Monotonic progression rank for Meta delivery states
 STATUS_PROGRESSION_ORDER: dict[str, int] = {
@@ -105,6 +111,34 @@ def verify_meta_webhook_signature(
         hashlib.sha256,
     ).hexdigest()
     return hmac.compare_digest(provided_hex.lower(), expected_hex.lower())
+
+
+def parse_meta_inbound_messages(payload: dict[str, Any]) -> list[dict[str, Any]]:
+    """Extract inbound customer messages from a Meta WhatsApp webhook payload."""
+    messages: list[dict[str, Any]] = []
+    if not isinstance(payload, dict):
+        return messages
+    entries = payload.get("entry")
+    if not isinstance(entries, list):
+        return messages
+    for entry in entries:
+        if not isinstance(entry, dict):
+            continue
+        changes = entry.get("changes")
+        if not isinstance(changes, list):
+            continue
+        for change in changes:
+            if not isinstance(change, dict):
+                continue
+            value = change.get("value")
+            if not isinstance(value, dict):
+                continue
+            raw_msgs = value.get("messages")
+            if isinstance(raw_msgs, list):
+                for m in raw_msgs:
+                    if isinstance(m, dict):
+                        messages.append(m)
+    return messages
 
 
 class MetaWebhookService:
@@ -201,16 +235,171 @@ class MetaWebhookService:
 
         return True, "Valid forward progression."
 
+    def process_inbound_messages(self, payload: dict[str, Any]) -> list[dict[str, Any]]:
+        """Process inbound customer messages (STOP opt-out, START opt-in, HELP, text) idempotently."""
+        raw_msgs = parse_meta_inbound_messages(payload)
+        if not raw_msgs:
+            return []
+
+        results: list[dict[str, Any]] = []
+        for msg in raw_msgs:
+            wamid = str(msg.get("id") or "").strip()
+            if not wamid:
+                continue
+
+            from_raw = str(msg.get("from") or "").strip()
+            phone = from_raw if from_raw.startswith("+") else f"+{from_raw}"
+            msg_type = str(msg.get("type") or "text")
+
+            # Extract body text safely
+            body = ""
+            if msg_type == "text" and isinstance(msg.get("text"), dict):
+                body = str(msg.get("text", {}).get("body") or "")
+            elif msg_type == "button" and isinstance(msg.get("button"), dict):
+                body = str(msg.get("button", {}).get("text") or "")
+            elif msg_type == "interactive" and isinstance(msg.get("interactive"), dict):
+                inter = msg["interactive"]
+                btn = inter.get("button_reply") if isinstance(inter.get("button_reply"), dict) else {}
+                lst = inter.get("list_reply") if isinstance(inter.get("list_reply"), dict) else {}
+                body = str(btn.get("title") or lst.get("title") or "")
+            else:
+                body = str(msg.get("text", {}).get("body") or msg_type)
+
+            # Deduplication claim in webhook_events
+            event_key = f"wa_inbound:{wamid}"
+            if len(event_key) > 128:
+                event_key = "wa_inbound:" + hashlib.sha256(event_key.encode("utf-8")).hexdigest()
+
+            try:
+                with self.session.begin_nested():
+                    ev = WebhookEvent(
+                        event_id=event_key,
+                        event_type=WebhookEventType.WHATSAPP_INBOUND_MESSAGE,
+                        external_order_id=None,
+                        source="meta_whatsapp_cloud_api",
+                        occurred_at=datetime.now(timezone.utc),
+                        processing_status=WebhookProcessingStatus.PROCESSED,
+                        payload=msg,
+                        processed_at=datetime.now(timezone.utc),
+                    )
+                    self.session.add(ev)
+                    self.session.flush()
+            except IntegrityError:
+                results.append({"wamid": wamid, "phone": phone, "outcome": "DUPLICATE_INBOUND_IGNORED"})
+                continue
+
+            # Resolve customer
+            customer = self.session.query(Customer).filter(Customer.phone_number == phone).first()
+            now_utc = datetime.now(timezone.utc)
+
+            # Persist inbound WhatsAppMessage
+            wa_inbound = WhatsAppMessage(
+                provider_message_id=wamid,
+                provider="META_CLOUD_API",
+                direction="INBOUND",
+                customer_id=customer.id if customer else None,
+                phone_number=phone,
+                message_type=msg_type,
+                body=body,
+                raw_payload=msg,
+                is_simulated=False,
+            )
+            self.session.add(wa_inbound)
+            self.session.flush()
+
+            # Deterministic keyword logic
+            norm_body = body.strip().upper()
+            action_taken = "RECEIVED"
+            reply_text: str | None = None
+
+            if norm_body in ("STOP", "UNSUBSCRIBE", "CANCEL", "OPT OUT", "OPTOUT"):
+                action_taken = "CUSTOMER_OPTED_OUT"
+                if customer:
+                    customer.opted_out = True
+                    customer.whatsapp_opt_in = False
+                    customer.opt_out_recorded_at = now_utc
+                reply_text = (
+                    "You have been successfully unsubscribed from Plural WhatsApp updates. "
+                    "Reply START to resubscribe anytime."
+                )
+            elif norm_body in ("START", "RESUBSCRIBE", "OPT IN", "OPTIN"):
+                action_taken = "CUSTOMER_RESUBSCRIBED"
+                if customer:
+                    customer.opted_out = False
+                    customer.whatsapp_opt_in = True
+                    customer.consent_source = "WHATSAPP_INBOUND_START"
+                    customer.consent_recorded_at = now_utc
+                reply_text = (
+                    "You have successfully subscribed to Plural WhatsApp updates. "
+                    "Reply STOP anytime to unsubscribe."
+                )
+            elif norm_body in ("HELP", "SUPPORT", "INFO"):
+                action_taken = "SUPPORT_INFO_SENT"
+                reply_text = (
+                    "Plural Support: For help with your order, contact support@pluralhealth.demo. "
+                    "Reply STOP to unsubscribe from messages."
+                )
+            else:
+                action_taken = "AUTO_ACK"
+                reply_text = (
+                    "Thank you for reaching out to Plural. "
+                    "Reply STOP to opt out of updates or HELP for support."
+                )
+
+            # Record and dispatch outbound reply
+            if reply_text:
+                outbound_id = f"reply_{wamid}_{int(time.time())}"
+                wa_outbound = WhatsAppMessage(
+                    provider_message_id=outbound_id,
+                    provider="META_CLOUD_API",
+                    direction="OUTBOUND",
+                    customer_id=customer.id if customer else None,
+                    phone_number=phone,
+                    message_type="text",
+                    body=reply_text,
+                    is_simulated=False,
+                )
+                self.session.add(wa_outbound)
+
+                if (
+                    self.settings.whatsapp_provider == "meta_cloud_api"
+                    and self.settings.whatsapp_access_token.get_secret_value()
+                ):
+                    try:
+                        prov = get_whatsapp_provider(settings=self.settings)
+                        prov.send_text_message(
+                            OutboundTextMessageRequest(
+                                recipient_phone=phone,
+                                body_text=reply_text,
+                            )
+                        )
+                    except Exception as exc:
+                        logger.error("Error sending WhatsApp reply: %s", exc)
+
+            results.append(
+                {
+                    "wamid": wamid,
+                    "phone": phone,
+                    "action_taken": action_taken,
+                    "outcome": "PROCESSED",
+                }
+            )
+
+        self.session.commit()
+        return results
+
     def process_status_webhook(
         self,
         payload: dict[str, Any],
     ) -> MetaStatusWebhookResponseSchema:
+        inbound_results = self.process_inbound_messages(payload)
         updates = parse_meta_status_entries(payload)
         if not updates:
             return MetaStatusWebhookResponseSchema(
                 status="IGNORED_NO_STATUS_EVENTS",
                 events_received=0,
-                details=[],
+                inbound_messages_processed=len(inbound_results),
+                details=inbound_results,
             )
 
         msg_repo = MessageLogRepository(self.session)
@@ -324,6 +513,7 @@ class MetaWebhookService:
             duplicates_ignored=duplicates_ignored,
             unknown_messages_ignored=unknown_messages_ignored,
             regressed_statuses_ignored=regressed_statuses_ignored,
-            details=details,
+            inbound_messages_processed=len(inbound_results),
+            details=details + inbound_results,
         )
 

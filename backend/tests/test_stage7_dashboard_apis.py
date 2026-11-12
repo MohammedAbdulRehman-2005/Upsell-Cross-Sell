@@ -191,10 +191,17 @@ def test_static_dashboard_pages_and_assets(client: TestClient) -> None:
     assert "Overview" in resp_page.text
     assert "WhatsApp Inbox" in resp_page.text
 
-    # 2. Root redirects to /simulator
+    # 2. Root serves storefront homepage directly
     resp_root = client.get("/", follow_redirects=False)
-    assert resp_root.status_code in (302, 307)
-    assert resp_root.headers.get("location") == "/simulator"
+    assert resp_root.status_code == 200
+    assert "text/html" in resp_root.headers.get("content-type", "")
+    assert "Plural Health" in resp_root.text
+
+    # Storefront route also serves storefront homepage
+    resp_store = client.get("/store", follow_redirects=False)
+    assert resp_store.status_code == 200
+    assert "text/html" in resp_store.headers.get("content-type", "")
+    assert "Plural Health" in resp_store.text
 
     # 3. CSS stylesheet serves correctly
     resp_css = client.get("/static/css/styles.css")

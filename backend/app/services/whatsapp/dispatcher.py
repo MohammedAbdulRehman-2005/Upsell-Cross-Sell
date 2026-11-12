@@ -1,4 +1,4 @@
-﻿"""Dispatch coordinator for persisted post-delivery upsell campaigns."""
+"""Dispatch coordinator for persisted post-delivery upsell campaigns."""
 from __future__ import annotations
 
 from datetime import datetime, timezone
@@ -142,6 +142,7 @@ def serialize_campaign_summary(
         external_customer_id=(
             customer.external_customer_id if customer else f"customer-{campaign.customer_id}"
         ),
+        customer_name=customer.full_name if customer else None,
         recipient_phone=campaign.recipient_phone,
         provider=provider_str,
         delivery_status=status_str,
@@ -153,6 +154,8 @@ def serialize_campaign_summary(
         provider_error_message=campaign.provider_error_message,
         retry_count=campaign.retry_count,
         is_simulated=is_sim,
+        whatsapp_opt_in=customer.whatsapp_opt_in if customer else None,
+        opted_out=customer.opted_out if customer else None,
         dispatch_started_at=campaign.dispatch_started_at,
         provider_accepted_at=campaign.provider_accepted_at,
         delivered_at=campaign.delivered_at,
@@ -177,13 +180,14 @@ def serialize_campaign_detail(
     if order and order.line_items:
         source_skus = [item.product_code for item in order.line_items]
         products_map = {p.product_code: p for p in product_repo.get_by_codes(source_skus)}
-        for item in order.line_items:
+        for item in sorted(order.line_items, key=lambda x: x.line_index):
             prod = products_map.get(item.product_code)
             source_items.append(
                 {
                     "sku_code": item.product_code,
                     "product_name": item.product_name or (prod.product_name if prod else item.product_code),
                     "quantity": item.quantity,
+                    "unit_price": float(prod.unit_price) if (prod and prod.unit_price is not None) else None,
                 }
             )
 

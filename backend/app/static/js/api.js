@@ -144,6 +144,18 @@ class ApiClient {
   async getProductDetail(productCode) {
     return this.request(`/products/${encodeURIComponent(productCode)}`);
   }
+
+  // --- Stage 8 Storefront & Demo Delivery ---
+  async createStorefrontOrder(checkoutPayload) {
+    return this.request('/store/orders', {
+      method: 'POST',
+      body: JSON.stringify(checkoutPayload),
+    });
+  }
+
+  async getStorefrontOrderTracking(orderId) {
+    return this.request(`/store/orders/${encodeURIComponent(orderId)}/tracking`);
+  }
 }
 
 // Export singleton instance for app scripts

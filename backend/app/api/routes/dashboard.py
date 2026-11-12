@@ -186,6 +186,7 @@ def list_orders(
                 delivered_at=order.delivered_at,
                 line_item_count=len(line_items_data),
                 items=line_items_data,
+                recommended_skus=list(camp.recommended_skus or []) if camp else [],
                 campaign_id=camp.id if camp else None,
                 campaign_status=str(camp.delivery_status) if camp else None,
                 created_at=order.created_at,

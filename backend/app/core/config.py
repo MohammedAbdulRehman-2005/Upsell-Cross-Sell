@@ -191,6 +191,21 @@ class Settings(BaseSettings):
         description="Finite HTTP timeout in seconds for outbound Meta Cloud API calls.",
     )
 
+    # Stage 8: Storefront & Demo Delivery Progression
+    demo_delivery_enabled: bool = Field(
+        default=False,
+        description=(
+            "Enables background automated demo delivery progression. "
+            "Must be explicitly enabled for automated storefront demonstration."
+        ),
+    )
+    demo_delivery_delay_seconds: float = Field(
+        default=12.0,
+        ge=1.0,
+        le=300.0,
+        description="Delay in seconds between storefront order placement and automated delivered state.",
+    )
+
     @property
     def meta_whatsapp_access_token(self) -> SecretStr:
         """Backward-compatible alias for whatsapp_access_token."""

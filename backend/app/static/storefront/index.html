@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Plural Health Store — Demo Storefront &amp; Delivery Journey</title>
+  <link rel="stylesheet" href="/static/storefront/store.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="store-header">
+    <div class="header-container">
+      <a href="/" class="brand-wrapper" title="Plural Health Storefront Home">
+        <div class="brand-logo-icon">P</div>
+        <div class="brand-text">
+          <h1>Plural Health <span class="brand-badge">Store</span></h1>
+          <div class="brand-subtitle">Everyday wellness, made simpler.</div>
+        </div>
+      </a>
+
+      <nav class="header-nav-links">
+        <a href="/" class="nav-link-item active">Shop</a>
+        <a href="#catalogue" class="nav-link-item">Catalogue</a>
+        <a href="/simulator?view=whatsapp-inbox" class="nav-link-item" id="nav-whatsapp-link" title="Open WhatsApp Inbox directly">WhatsApp Inbox</a>
+      </nav>
+
+      <div class="header-actions">
+        <button class="cart-toggle-btn" id="btn-open-cart" type="button" aria-label="Open Shopping Cart">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+          </svg>
+          <span>Cart</span>
+          <span class="cart-pill-count" id="cart-counter">0</span>
+        </button>
+
+        <a href="/simulator" class="admin-switch-btn" title="Internal Management Workspace (Overview)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+            <line x1="8" y1="21" x2="16" y2="21"></line>
+            <line x1="12" y1="17" x2="12" y2="21"></line>
+          </svg>
+          <span>Admin</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="store-hero">
+    <div class="hero-content">
+      <div class="demo-status-pill">
+        <span class="pulse-dot"></span>
+        <span>⚡ Automated Demo Delivery: 12-Second Journey Active</span>
+      </div>
+      <h2>Everyday wellness, made simpler.</h2>
+      <p>Explore the products available in the Plural catalogue. Place a demo order to experience automated 12-second progression, deterministic cross-sell recommendations, and WhatsApp notifications.</p>
+
+      <div class="hero-search-wrapper">
+        <svg class="search-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="store-search" placeholder="Search products by name or code (e.g. SAMPLE-001, Face Cleanser)..." autocomplete="off">
+      </div>
+    </div>
+  </section>
+
+  <!-- Catalogue Section -->
+  <main class="catalogue-section" id="catalogue">
+    <div class="catalogue-toolbar">
+      <div class="cluster-filter-group" id="cluster-filter-group">
+        <button class="filter-chip active" data-cluster="all" type="button">All Products (70)</button>
+        <button class="filter-chip" data-cluster="1" type="button">Cluster 1 (001–007)</button>
+        <button class="filter-chip" data-cluster="2" type="button">Cluster 2 (008–014)</button>
+        <button class="filter-chip" data-cluster="3" type="button">Cluster 3 (015–021)</button>
+        <button class="filter-chip" data-cluster="4" type="button">Cluster 4 (022–028)</button>
+        <button class="filter-chip" data-cluster="5" type="button">Cluster 5 (029–035)</button>
+        <button class="filter-chip" data-cluster="6" type="button">Cluster 6 (036–042)</button>
+        <button class="filter-chip" data-cluster="7" type="button">Cluster 7 (043–049)</button>
+        <button class="filter-chip" data-cluster="8" type="button">Cluster 8 (050–056)</button>
+        <button class="filter-chip" data-cluster="9" type="button">Cluster 9 (057–063)</button>
+        <button class="filter-chip" data-cluster="10" type="button">Cluster 10 (064–070)</button>
+      </div>
+
+      <div class="toolbar-meta">
+        <span id="product-count-label">Loading products from catalogue...</span>
+        <span class="provenance-tag">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+          Provenance: [DEMO DATA]
+        </span>
+      </div>
+    </div>
+
+    <!-- 4-Column Product Grid -->
+    <div class="products-grid" id="products-grid">
+      <!-- Injected by JavaScript -->
+    </div>
+  </main>
+
+  <!-- Slide-out Cart & Checkout Drawer -->
+  <div class="drawer-backdrop" id="cart-drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title">
+    <div class="drawer-container">
+      <div class="drawer-header">
+        <h3 id="drawer-title">Shopping Cart (<span id="drawer-cart-count">0</span>)</h3>
+        <button class="btn-close-icon" id="btn-close-cart" type="button" aria-label="Close cart">&times;</button>
+      </div>
+
+      <div class="drawer-content">
+        <div id="cart-items-container">
+          <div class="cart-empty-state">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="9" cy="21" r="1"></circle>
+              <circle cx="20" cy="21" r="1"></circle>
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+            </svg>
+            <p>Your cart is empty.</p>
+            <p style="font-size: 0.8rem; margin-top: 0.35rem;">Add items from the catalogue to place a demo order.</p>
+          </div>
+        </div>
+
+        <form class="checkout-section-divider" id="checkout-form" onsubmit="return false;">
+          <h4>Delivery &amp; Customer Information</h4>
+
+          <div class="form-field">
+            <label for="cust-name">Full Name *</label>
+            <input type="text" id="cust-name" required placeholder="e.g. Rahul Sharma" value="Rahul Sharma">
+          </div>
+
+          <div class="form-field">
+            <label for="cust-phone">WhatsApp Mobile Number (Strict E.164) *</label>
+            <input type="text" id="cust-phone" required placeholder="+919876543210" value="+919876543210" pattern="^\+[1-9]\d{7,14}$">
+            <span class="field-help-text">Must include '+' prefix followed by country code and subscriber number (e.g., +91 for India, +1 for US).</span>
+          </div>
+
+          <div class="form-field">
+            <label for="cust-addr">Delivery Address *</label>
+            <textarea id="cust-addr" rows="2" required placeholder="Flat / Building, Street, City, PIN">Flat 402, Green Glen Layout, Bellandur, Bangalore 560103</textarea>
+          </div>
+
+          <!-- Explicit Unchecked-by-Default Consent Checkbox -->
+          <div class="consent-agreement-card">
+            <input type="checkbox" id="chk-whatsapp-opt-in">
+            <label for="chk-whatsapp-opt-in" class="consent-statement">
+              <strong>WhatsApp Order Updates &amp; Wellness Recommendations</strong>
+              I consent to receive automated post-delivery order updates and personalized health recommendations on WhatsApp from Plural. Reply STOP anytime to opt out.
+            </label>
+          </div>
+
+          <div id="checkout-error-banner" style="display: none; background-color: #fee2e2; border: 1px solid #ef4444; color: #b91c1c; padding: 0.65rem 0.85rem; border-radius: 8px; font-size: 0.8rem; margin-bottom: 1rem;"></div>
+        </form>
+      </div>
+
+      <div class="drawer-footer">
+        <div class="subtotal-row">
+          <span>Subtotal (Demo)</span>
+          <span id="cart-total-price">₹0.00</span>
+        </div>
+        <button class="btn-submit-checkout" id="btn-place-order" type="button" disabled>
+          <span>Place Order &amp; Start Demo (12s Delivery)</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Live Order Tracking Modal -->
+  <div class="tracking-backdrop" id="tracking-modal" role="dialog" aria-modal="true" aria-labelledby="track-order-id">
+    <div class="tracking-card-container">
+      <button class="btn-close-icon" id="btn-close-tracking" style="position: absolute; right: 1.25rem; top: 1.25rem;" type="button" aria-label="Close tracking">&times;</button>
+
+      <div class="tracking-card-header">
+        <span class="demo-status-pill" id="track-status-pill" style="margin-bottom: 0.5rem;">ORDER PLACED</span>
+        <h3 id="track-order-id">ORD-STORE-...</h3>
+        <p id="track-customer-info">Delivering to Rahul Sharma &bull; Bangalore</p>
+      </div>
+
+      <div class="demo-delivery-callout">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0;">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        <div>
+          <strong>Automated Demo Progression Active:</strong> This demo order progresses through 5 order states to <code>DELIVERED</code> in ~12 seconds to showcase the end-to-end post-delivery lifecycle.
+        </div>
+      </div>
+
+      <div class="timer-countdown-card" id="timer-box">
+        <div class="timer-label">Estimated Delivery Countdown</div>
+        <div class="timer-seconds-display" id="countdown-val">12.0s</div>
+      </div>
+
+      <!-- 5-Step Stepper -->
+      <div class="tracking-stepper-list" id="tracking-stepper">
+        <!-- Injected dynamically -->
+      </div>
+
+      <!-- Post-Delivery Recommendations Section -->
+      <div class="post-delivery-box" id="delivery-delivered-section" style="display: none;">
+        <h4>
+          <span>Generated Cross-Sell Recommendations</span>
+          <span class="chip-status otc" id="rec-campaign-badge">DISPATCHED</span>
+        </h4>
+        <p style="font-size: 0.8rem; color: #64748b; margin-bottom: 0.85rem;" id="delivered-desc">
+          Automated delivery confirmed. The deterministic recommendation engine evaluated your purchased products and selected up to 6 eligible post-delivery items.
+        </p>
+
+        <div class="rec-grid-compact" id="tracking-rec-cards">
+          <!-- Injected dynamically -->
+        </div>
+
+        <div style="margin-top: 1.5rem; text-align: center;">
+          <a href="/simulator?view=whatsapp-inbox" class="btn-submit-checkout" style="text-decoration: none; display: inline-flex; width: auto; padding: 0.65rem 1.25rem;">
+            <span>Open WhatsApp Inbox &amp; Decision Trace</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // State management
+    const state = {
+      products: [],
+      filteredProducts: [],
+      cart: {}, // sku -> quantity
+      activeCluster: "all",
+      searchQuery: "",
+      currentOrderId: null,
+      pollInterval: null,
+    };
+
+    // Neutral SVG placeholder for products
+    const SVG_PRODUCT_PLACEHOLDER = `
+      <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="18" y="14" width="28" height="42" rx="6" ry="6"></rect>
+        <path d="M24 14V8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v6"></path>
+        <line x1="32" y1="28" x2="32" y2="42"></line>
+        <line x1="25" y1="35" x2="39" y2="35"></line>
+      </svg>
+    `;
+
+    // Compute cluster ID (1-10) from product code (e.g., SAMPLE-001 -> 1, SAMPLE-070 -> 10)
+    function getProductCluster(code) {
+      const match = (code || "").match(/\d+/);
+      if (!match) return 1;
+      const num = parseInt(match[0], 10);
+      return Math.min(10, Math.max(1, Math.ceil(num / 7)));
+    }
+
+    // Load product catalogue from API
+    async function fetchProducts() {
+      try {
+        const res = await fetch("/api/v1/products");
+        if (!res.ok) throw new Error("Failed to load products");
+        const data = await res.json();
+        state.products = data;
+        filterAndRenderProducts();
+      } catch (err) {
+        console.error("Error fetching products:", err);
+        document.getElementById("product-count-label").textContent = "Error loading products from catalogue.";
+      }
+    }
+
+    function filterAndRenderProducts() {
+      let list = state.products;
+
+      // Filter by cluster
+      if (state.activeCluster !== "all") {
+        const targetCluster = parseInt(state.activeCluster, 10);
+        list = list.filter(p => getProductCluster(p.product_code) === targetCluster);
+      }
+
+      // Filter by search query
+      if (state.searchQuery.trim()) {
+        const q = state.searchQuery.toLowerCase().trim();
+        list = list.filter(p =>
+          (p.product_name || "").toLowerCase().includes(q) ||
+          (p.product_code || "").toLowerCase().includes(q)
+        );
+      }
+
+      state.filteredProducts = list;
+      document.getElementById("product-count-label").textContent = `Showing ${list.length} of ${state.products.length} products`;
+      renderGrid();
+    }
+
+    function renderGrid() {
+      const container = document.getElementById("products-grid");
+      if (!state.filteredProducts.length) {
+        container.innerHTML = `
+          <div style="grid-column: 1/-1; text-align: center; padding: 4rem 1rem; color: #64748b;">
+            <p style="font-size: 1.1rem; font-weight: 600; color: #334155; margin-bottom: 0.5rem;">No products found</p>
+            <p style="font-size: 0.85rem;">Try adjusting your search terms or cluster filter.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = state.filteredProducts.map(p => {
+        const clusterId = getProductCluster(p.product_code);
+        const isRx = p.is_rx === true;
+        const rxLabel = isRx ? "Rx (Demo)" : (p.is_rx === false ? "OTC (Demo)" : "Unspecified");
+        const rxClass = isRx ? "rx" : (p.is_rx === false ? "otc" : "unspecified");
+        const price = p.unit_price ? parseFloat(p.unit_price).toFixed(2) : "199.00";
+        const inCartQty = state.cart[p.product_code] || 0;
+
+        return `
+          <div class="product-card">
+            <div class="card-image-box">
+              ${SVG_PRODUCT_PLACEHOLDER}
+              <div class="badge-row-top">
+                <span class="chip-cluster">Cluster ${clusterId}</span>
+                <span class="chip-status ${rxClass}">${rxLabel}</span>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="card-info">
+                <h3 class="card-title" title="${escapeHtml(p.product_name)}">${escapeHtml(p.product_name)}</h3>
+                <div class="card-sku">
+                  <span>${p.product_code}</span>
+                  <span style="color: #94a3b8;">&bull;</span>
+                  <span style="font-size: 0.68rem; color: #0284c7; background: #e0f2fe; padding: 1px 4px; border-radius: 4px;">DEMO DATA</span>
+                </div>
+              </div>
+              <div class="card-bottom-row">
+                <div class="card-price-col">
+                  <span class="card-price">₹${price}</span>
+                  <span class="card-price-label">Demo Price</span>
+                </div>
+                <button class="btn-add-cart ${inCartQty > 0 ? "added" : ""}" type="button" onclick="addToCart('${p.product_code}')">
+                  ${inCartQty > 0 ? `<span>In Cart (${inCartQty})</span>` : `<span>Add to Cart</span>`}
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    // Cart actions
+    window.addToCart = function(sku) {
+      state.cart[sku] = (state.cart[sku] || 0) + 1;
+      updateCartUI();
+      renderGrid();
+    };
+
+    window.updateQty = function(sku, delta) {
+      const cur = state.cart[sku] || 0;
+      const next = cur + delta;
+      if (next <= 0) {
+        delete state.cart[sku];
+      } else {
+        state.cart[sku] = next;
+      }
+      updateCartUI();
+      renderGrid();
+    };
+
+    function updateCartUI() {
+      const skus = Object.keys(state.cart);
+      const totalCount = skus.reduce((sum, sku) => sum + state.cart[sku], 0);
+      document.getElementById("cart-counter").textContent = totalCount;
+      document.getElementById("drawer-cart-count").textContent = totalCount;
+
+      let subtotal = 0;
+      const itemsContainer = document.getElementById("cart-items-container");
+
+      if (totalCount === 0) {
+        itemsContainer.innerHTML = `
+          <div class="cart-empty-state">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="9" cy="21" r="1"></circle>
+              <circle cx="20" cy="21" r="1"></circle>
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+            </svg>
+            <p>Your cart is empty.</p>
+            <p style="font-size: 0.8rem; margin-top: 0.35rem;">Add items from the catalogue to place a demo order.</p>
+          </div>
+        `;
+        document.getElementById("btn-place-order").disabled = true;
+        document.getElementById("cart-total-price").textContent = "₹0.00";
+        return;
+      }
+
+      document.getElementById("btn-place-order").disabled = false;
+
+      itemsContainer.innerHTML = skus.map(sku => {
+        const prod = state.products.find(p => p.product_code === sku) || { product_name: sku, unit_price: 199.0 };
+        const price = prod.unit_price ? parseFloat(prod.unit_price) : 199.0;
+        const qty = state.cart[sku];
+        subtotal += price * qty;
+        return `
+          <div class="cart-line-item">
+            <div class="line-item-details">
+              <h4>${escapeHtml(prod.product_name)}</h4>
+              <p>₹${price.toFixed(2)} &bull; ${sku}</p>
+            </div>
+            <div class="qty-control-box">
+              <button type="button" class="qty-btn" onclick="updateQty('${sku}', -1)" aria-label="Decrease quantity">&minus;</button>
+              <span class="qty-number">${qty}</span>
+              <button type="button" class="qty-btn" onclick="updateQty('${sku}', 1)" aria-label="Increase quantity">&plus;</button>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      document.getElementById("cart-total-price").textContent = `₹${subtotal.toFixed(2)}`;
+    }
+
+    // Submit Order with strict E.164 phone validation
+    document.getElementById("btn-place-order").addEventListener("click", async () => {
+      const name = document.getElementById("cust-name").value.trim();
+      const phone = document.getElementById("cust-phone").value.trim();
+      const address = document.getElementById("cust-addr").value.trim();
+      const optIn = document.getElementById("chk-whatsapp-opt-in").checked;
+      const errBanner = document.getElementById("checkout-error-banner");
+
+      errBanner.style.display = "none";
+      errBanner.textContent = "";
+
+      if (!name) {
+        showError("Full Name is required.");
+        return;
+      }
+
+      // Strict E.164 validation: requires '+' followed by 8-15 digits
+      const e164Regex = /^\+[1-9]\d{7,14}$/;
+      if (!e164Regex.test(phone)) {
+        showError("Invalid phone number. Must be strict E.164 format with '+' prefix (e.g. +919876543210).");
+        return;
+      }
+
+      if (!address) {
+        showError("Delivery Address is required.");
+        return;
+      }
+
+      const items = Object.keys(state.cart).map(sku => ({
+        product_code: sku,
+        quantity: state.cart[sku],
+      }));
+
+      if (!items.length) {
+        showError("Cart is empty. Add at least one product.");
+        return;
+      }
+
+      const payload = {
+        customer_name: name,
+        customer_phone: phone,
+        delivery_address: address,
+        items: items,
+        whatsapp_opt_in: optIn,
+      };
+
+      const btn = document.getElementById("btn-place-order");
+      btn.disabled = true;
+      btn.innerHTML = `<span>Placing Order...</span>`;
+
+      try {
+        const res = await fetch("/api/v1/store/orders", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          throw new Error(errData.detail || `Order checkout failed with status ${res.status}`);
+        }
+
+        const data = await res.json();
+        // Clear cart
+        state.cart = {};
+        updateCartUI();
+        renderGrid();
+        document.getElementById("cart-drawer").classList.remove("active");
+
+        // Open live tracking
+        openTrackingModal(data.external_order_id);
+      } catch (err) {
+        showError(err.message || "Failed to place order.");
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<span>Place Order &amp; Start Demo (12s Delivery)</span>`;
+      }
+    });
+
+    function showError(msg) {
+      const errBanner = document.getElementById("checkout-error-banner");
+      errBanner.textContent = msg;
+      errBanner.style.display = "block";
+    }
+
+    // Live Tracking & Polling
+    function openTrackingModal(orderId) {
+      state.currentOrderId = orderId;
+      document.getElementById("tracking-modal").classList.add("active");
+      pollTracking(orderId);
+      if (state.pollInterval) clearInterval(state.pollInterval);
+      state.pollInterval = setInterval(() => pollTracking(orderId), 1200);
+    }
+
+    async function pollTracking(orderId) {
+      try {
+        const res = await fetch(`/api/v1/store/orders/${orderId}/tracking`);
+        if (!res.ok) return;
+        const data = await res.json();
+        renderTracking(data);
+        if (data.delivery_completed) {
+          clearInterval(state.pollInterval);
+          state.pollInterval = null;
+        }
+      } catch (err) {
+        console.error("Polling error:", err);
+      }
+    }
+
+    function renderTracking(data) {
+      document.getElementById("track-order-id").textContent = data.external_order_id;
+      document.getElementById("track-status-pill").textContent = (data.order_status || "PENDING").replace(/_/g, " ");
+      document.getElementById("track-customer-info").textContent =
+        `Delivering to ${data.customer_name || "Customer"} &bull; ${data.delivery_address || ""}`;
+
+      // Timer
+      if (data.delivery_completed) {
+        document.getElementById("timer-box").style.display = "none";
+        document.getElementById("delivery-delivered-section").style.display = "block";
+      } else {
+        document.getElementById("timer-box").style.display = "block";
+        const rem = Math.max(0, data.seconds_remaining || 0);
+        document.getElementById("countdown-val").textContent = `${rem.toFixed(1)}s`;
+        document.getElementById("delivery-delivered-section").style.display = "none";
+      }
+
+      // Stepper
+      const stepper = document.getElementById("tracking-stepper");
+      stepper.innerHTML = (data.steps || []).map(step => {
+        const cls = step.is_completed ? "completed" : (step.is_current ? "current" : "");
+        const icon = step.is_completed ? "✓" : (step.is_current ? "●" : "○");
+        const timeStr = step.timestamp ? new Date(step.timestamp).toLocaleTimeString() : "Pending";
+        return `
+          <div class="stepper-node ${cls}">
+            <div class="stepper-marker">${icon}</div>
+            <div class="stepper-info">
+              <h5>${step.label}</h5>
+              <span>${timeStr}</span>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      // Recommendations
+      if (data.delivery_completed) {
+        const badge = document.getElementById("rec-campaign-badge");
+        const status = data.whatsapp_campaign_status || "DISPATCHED";
+        badge.textContent = status;
+        if (status === "SUPPRESSED") {
+          badge.className = "chip-status rx";
+        } else {
+          badge.className = "chip-status otc";
+        }
+
+        const recCards = document.getElementById("tracking-rec-cards");
+        if (data.recommendations && data.recommendations.length) {
+          recCards.innerHTML = data.recommendations.map(r => `
+            <div class="rec-item-card">
+              <h6>${escapeHtml(r.product_name)}</h6>
+              <p>${r.product_code} &bull; ${r.category || "OTC"}</p>
+              <div class="rec-price">${r.unit_price ? "₹" + parseFloat(r.unit_price).toFixed(2) : "₹199.00"}</div>
+            </div>
+          `).join("");
+        } else {
+          recCards.innerHTML = `
+            <div style="grid-column: 1/-1; text-align: center; color: #64748b; font-size: 0.85rem; padding: 1rem;">
+              No cross-sell recommendations generated (campaign may be suppressed if WhatsApp consent was unchecked).
+            </div>
+          `;
+        }
+      }
+    }
+
+    function escapeHtml(str) {
+      if (!str) return "";
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    // Event listeners
+    document.getElementById("btn-open-cart").addEventListener("click", () => {
+      document.getElementById("cart-drawer").classList.add("active");
+    });
+    document.getElementById("btn-close-cart").addEventListener("click", () => {
+      document.getElementById("cart-drawer").classList.remove("active");
+    });
+    document.getElementById("btn-close-tracking").addEventListener("click", () => {
+      document.getElementById("tracking-modal").classList.remove("active");
+      if (state.pollInterval) {
+        clearInterval(state.pollInterval);
+        state.pollInterval = null;
+      }
+    });
+
+    // Close drawers on backdrop click
+    document.getElementById("cart-drawer").addEventListener("click", (e) => {
+      if (e.target.id === "cart-drawer") {
+        document.getElementById("cart-drawer").classList.remove("active");
+      }
+    });
+    document.getElementById("tracking-modal").addEventListener("click", (e) => {
+      if (e.target.id === "tracking-modal") {
+        document.getElementById("tracking-modal").classList.remove("active");
+        if (state.pollInterval) {
+          clearInterval(state.pollInterval);
+          state.pollInterval = null;
+        }
+      }
+    });
+
+    // Cluster filter chips
+    document.querySelectorAll(".filter-chip").forEach(chip => {
+      chip.addEventListener("click", (e) => {
+        document.querySelectorAll(".filter-chip").forEach(c => c.classList.remove("active"));
+        e.target.classList.add("active");
+        state.activeCluster = e.target.dataset.cluster;
+        filterAndRenderProducts();
+      });
+    });
+
+    // Search input
+    document.getElementById("store-search").addEventListener("input", (e) => {
+      state.searchQuery = e.target.value;
+      filterAndRenderProducts();
+    });
+
+    // Check if URL has order ID: e.g. /store/order/ORD-STORE-xxx
+    const pathParts = window.location.pathname.split("/");
+    if (pathParts.includes("order") && pathParts[pathParts.indexOf("order") + 1]) {
+      const orderId = pathParts[pathParts.indexOf("order") + 1];
+      openTrackingModal(orderId);
+    }
+
+    // Provider status check
+    async function checkStorefrontProviderStatus() {
+      try {
+        const res = await fetch("/api/v1/campaigns/provider-status");
+        if (!res.ok) return;
+        const status = await res.json();
+        const heroPill = document.querySelector(".demo-status-pill span:last-child");
+        const whatsappLink = document.getElementById("nav-whatsapp-link");
+
+        const isSim = (status.active_provider || "").includes("SIMULATOR");
+        const modeLabel = isSim
+          ? "Simulator Mode"
+          : (status.is_configured ? "Meta WhatsApp Cloud API" : "Meta API (Not Configured)");
+
+        if (heroPill) {
+          heroPill.innerHTML = `⚡ Automated Demo Delivery: 12-Second Journey Active &bull; <strong style="color:${isSim ? '#10b981' : '#38bdf8'}">${modeLabel}</strong>`;
+        }
+        if (whatsappLink) {
+          whatsappLink.title = `Open WhatsApp Inbox directly (${modeLabel})`;
+        }
+      } catch (err) {
+        console.warn("Could not check provider status on storefront", err);
+      }
+    }
+
+    // Initialize
+    fetchProducts();
+    checkStorefrontProviderStatus();
+  </script>
+</body>
+</html>

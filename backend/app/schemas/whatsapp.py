@@ -63,6 +63,7 @@ class CampaignSummarySchema(BaseModel):
     order_number: str | None = None
     customer_id: int
     external_customer_id: str
+    customer_name: str | None = None
     recipient_phone: str | None = None
     provider: MessagingProvider | str | None = None
     delivery_status: MessageDeliveryStatus | str
@@ -74,6 +75,8 @@ class CampaignSummarySchema(BaseModel):
     provider_error_message: str | None = None
     retry_count: int = 0
     is_simulated: bool = False
+    whatsapp_opt_in: bool | None = None
+    opted_out: bool | None = None
     dispatch_started_at: datetime | None = None
     provider_accepted_at: datetime | None = None
     delivered_at: datetime | None = None
@@ -187,6 +190,7 @@ class MetaStatusWebhookResponseSchema(BaseModel):
     duplicates_ignored: int = 0
     unknown_messages_ignored: int = 0
     regressed_statuses_ignored: int = 0
+    inbound_messages_processed: int = 0
     details: list[dict[str, Any]] = Field(default_factory=list)
 
 

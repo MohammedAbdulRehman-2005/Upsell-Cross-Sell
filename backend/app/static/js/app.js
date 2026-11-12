@@ -22,6 +22,7 @@ const state = {
   campaignStatusFilter: 'ALL',
   campaignSearchQuery: '',
   productSearchQuery: '',
+  isProfileOpen: localStorage.getItem('inbox_profile_open') !== 'false',
 };
 
 // Utilities
@@ -112,14 +113,55 @@ $('confirm-action-btn').addEventListener('click', async () => {
 });
 $('confirm-cancel-btn').addEventListener('click', closeConfirmModal);
 
-// Navigation View Routing
-function switchView(viewName) {
-  state.activeView = viewName;
+// Navigation View Routing & Information Architecture
+function normalizeViewName(raw) {
+  if (!raw) return 'overview';
+  const lower = String(raw).toLowerCase().trim();
+  if (lower === 'whatsapp-inbox' || lower === 'inbox') return 'inbox';
+  if (lower === 'orders' || lower === 'orders-customers') return 'orders-customers';
+  if (lower === 'campaigns') return 'campaigns';
+  if (lower === 'settings') return 'settings';
+  return 'overview';
+}
+
+function getViewFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const viewParam = params.get('view');
+  return normalizeViewName(viewParam);
+}
+
+function updateUrlForView(viewName, replace = false) {
+  let targetUrl = '/simulator';
+  if (viewName === 'inbox') {
+    targetUrl = '/simulator?view=whatsapp-inbox';
+  } else if (viewName === 'orders-customers') {
+    targetUrl = '/simulator?view=orders-customers';
+  } else if (viewName === 'campaigns') {
+    targetUrl = '/simulator?view=campaigns';
+  } else if (viewName === 'settings') {
+    targetUrl = '/simulator?view=settings';
+  }
+
+  const currentPath = window.location.pathname + window.location.search;
+  if (currentPath !== targetUrl) {
+    if (replace) {
+      window.history.replaceState({ view: viewName }, '', targetUrl);
+    } else {
+      window.history.pushState({ view: viewName }, '', targetUrl);
+    }
+  }
+}
+
+function switchView(viewName, updateHistory = true) {
+  const normalized = normalizeViewName(viewName);
+  state.activeView = normalized;
+
   document.querySelectorAll('.nav-link').forEach((link) => {
-    link.classList.toggle('active', link.dataset.view === viewName);
+    const isTarget = link.dataset.view === normalized;
+    link.classList.toggle('active', isTarget);
   });
   document.querySelectorAll('.view-pane').forEach((pane) => {
-    pane.classList.toggle('active', pane.id === `view-${viewName}`);
+    pane.classList.toggle('active', pane.id === `view-${normalized}`);
   });
 
   const titles = {
@@ -127,19 +169,28 @@ function switchView(viewName) {
     campaigns: 'Campaign Management',
     inbox: 'WhatsApp Commerce Inbox',
     'orders-customers': 'Orders & Customers',
-    catalogue: 'Product Catalogue & Mappings',
     settings: 'Settings & Integration Status',
   };
-  $('topbar-title').textContent = titles[viewName] || 'Dashboard';
+  $('topbar-title').textContent = titles[normalized] || 'Dashboard';
+
+  if (updateHistory) {
+    updateUrlForView(normalized, false);
+  }
 
   // Load view-specific data
-  if (viewName === 'overview') loadOverview();
-  else if (viewName === 'campaigns') loadCampaigns();
-  else if (viewName === 'inbox') loadInbox();
-  else if (viewName === 'orders-customers') loadOrdersAndCustomers();
-  else if (viewName === 'catalogue') loadCatalogue();
-  else if (viewName === 'settings') loadSettings();
+  if (normalized === 'overview') loadOverview();
+  else if (normalized === 'campaigns') loadCampaigns();
+  else if (normalized === 'inbox') loadInbox();
+  else if (normalized === 'orders-customers') loadOrdersAndCustomers();
+  else if (normalized === 'settings') loadSettings();
 }
+window.switchView = switchView;
+
+// Browser Back and Forward Navigation Listener
+window.addEventListener('popstate', (e) => {
+  const targetView = (e.state && e.state.view) ? normalizeViewName(e.state.view) : getViewFromUrl();
+  switchView(targetView, false);
+});
 
 document.querySelectorAll('.nav-link').forEach((link) => {
   link.addEventListener('click', (e) => {
@@ -182,15 +233,38 @@ async function loadProviderStatus() {
     state.providerStatus = status;
 
     const el = $('provider-indicator-pill');
+    const sidebarBadge = $('sidebar-inbox-badge');
+
     if (status.active_provider.includes('SIMULATOR')) {
       el.className = 'provider-indicator simulated';
       el.innerHTML = `<span class="env-dot" style="background:#059669"></span><span>SIMULATOR MODE</span>`;
+      if (sidebarBadge) {
+        sidebarBadge.textContent = 'SIM';
+        sidebarBadge.style.display = 'inline-block';
+        sidebarBadge.style.background = '#065f46';
+        sidebarBadge.style.color = '#34d399';
+        sidebarBadge.title = 'Simulator Mode Active';
+      }
     } else if (status.is_configured) {
       el.className = 'provider-indicator meta-live';
       el.innerHTML = `<span class="env-dot" style="background:#2563eb"></span><span>META CLOUD API (CONFIGURED)</span>`;
+      if (sidebarBadge) {
+        sidebarBadge.textContent = 'LIVE';
+        sidebarBadge.style.display = 'inline-block';
+        sidebarBadge.style.background = '#1e40af';
+        sidebarBadge.style.color = '#93c5fd';
+        sidebarBadge.title = 'Meta WhatsApp Cloud API Live';
+      }
     } else {
       el.className = 'provider-indicator meta-unconfigured';
       el.innerHTML = `<span class="env-dot" style="background:#d97706"></span><span>META API (NOT CONFIGURED)</span>`;
+      if (sidebarBadge) {
+        sidebarBadge.textContent = 'NOT CONFIGURED';
+        sidebarBadge.style.display = 'inline-block';
+        sidebarBadge.style.background = '#92400e';
+        sidebarBadge.style.color = '#fcd34d';
+        sidebarBadge.title = 'Meta API Not Configured';
+      }
     }
   } catch (err) {
     console.error('Failed to load provider status:', err);
@@ -516,21 +590,21 @@ async function openCampaignDrawer(campaignId) {
         <div class="detail-row"><span class="detail-label">Suppression Reason:</span><span class="detail-val">${esc(detail.suppression_reason || 'None')}</span></div>
       </div>
 
-      <h5 style="font-size:12px;text-transform:uppercase;color:#64748b;margin:16px 0 8px;">Delivered Order Items (Source Products)</h5>
+      <h5 style="font-size:12px;text-transform:uppercase;color:#0369a1;margin:16px 0 8px;">Delivered Order Line Items (Purchased Products &mdash; Source Triggers)</h5>
       <div style="margin-bottom:16px;">
         ${(detail.source_items || [])
           .map(
             (item) => `
           <div style="display:flex;justify-content:space-between;padding:6px 10px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;margin-bottom:4px;font-size:12px;">
-            <span><strong>${esc(item.sku_code)}</strong> — ${esc(item.product_name)}</span>
-            <span>Qty: ${item.quantity}</span>
+            <span><span class="tag-sku-purchased">${esc(item.sku_code)}</span> &mdash; ${esc(item.product_name)}</span>
+            <span style="font-weight:600;color:#0284c7;">Qty: ${item.quantity}${item.unit_price ? ' &bull; ₹' + item.unit_price.toFixed(2) : ''}</span>
           </div>
         `
           )
           .join('') || '<p class="text-muted">No items recorded.</p>'}
       </div>
 
-      <h5 style="font-size:12px;text-transform:uppercase;color:#64748b;margin:16px 0 8px;">Allocated Recommendation Cards (${(detail.recommendation_cards || []).length})</h5>
+      <h5 style="font-size:12px;text-transform:uppercase;color:#15803d;margin:16px 0 8px;">Allocated Recommendation Cards (Algorithmic Cross-Sells &mdash; Purchased Excluded) (${(detail.recommendation_cards || []).length})</h5>
       <div style="margin-bottom:16px;">
         ${cardsHtml || '<p class="text-muted">No recommendations generated.</p>'}
       </div>
@@ -565,10 +639,46 @@ function confirmDispatch(campaignId, isRetry = false) {
 }
 window.confirmDispatch = confirmDispatch;
 
+// Collapsible Customer Profile Panel Handler
+function toggleProfilePanel(forceState = null) {
+  if (forceState !== null) {
+    state.isProfileOpen = Boolean(forceState);
+  } else {
+    state.isProfileOpen = !state.isProfileOpen;
+  }
+
+  const container = $('inbox-container');
+  if (container) {
+    container.classList.toggle('profile-closed', !state.isProfileOpen);
+  }
+
+  const toggleBtn = $('btn-toggle-profile');
+  if (toggleBtn) {
+    toggleBtn.classList.toggle('active', state.isProfileOpen);
+    const titleText = state.isProfileOpen ? 'Hide customer profile' : 'Show customer profile';
+    toggleBtn.title = titleText;
+    toggleBtn.setAttribute('aria-label', titleText);
+    toggleBtn.setAttribute('aria-expanded', String(state.isProfileOpen));
+    const labelSpan = toggleBtn.querySelector('.btn-toggle-label');
+    if (labelSpan) {
+      labelSpan.textContent = state.isProfileOpen ? 'Hide Profile' : 'Profile';
+    }
+  }
+
+  try {
+    localStorage.setItem('inbox_profile_open', String(state.isProfileOpen));
+  } catch (e) {}
+}
+window.toggleProfilePanel = toggleProfilePanel;
+
 // ==========================================================================
 // VIEW 3: WhatsApp Inbox (First-Class Feature)
 // ==========================================================================
 async function loadInbox() {
+  const container = $('inbox-container');
+  if (container) {
+    container.classList.toggle('profile-closed', !state.isProfileOpen);
+  }
   try {
     const campaigns = await window.api.getCampaigns();
     state.campaigns = campaigns;
@@ -630,6 +740,8 @@ async function selectInboxCampaign(campaignId) {
 
   $('inbox-chat-header').innerHTML = `<h4>Loading Conversation #${campaignId}...</h4>`;
   $('inbox-chat-messages').innerHTML = `<div class="empty-state"><p>Retrieving WhatsApp conversation history...</p></div>`;
+  $('inbox-chat-actions').innerHTML = '';
+  $('inbox-right-drawer').innerHTML = `<div class="empty-state"><p>Loading order &amp; customer profile...</p></div>`;
 
   try {
     const detail = await window.api.getCampaignDetail(campaignId);
@@ -637,20 +749,52 @@ async function selectInboxCampaign(campaignId) {
 
     // Header
     const isSimulated = detail.is_simulated || detail.delivery_status === 'SENT_SIMULATED';
+    const custDisplay = detail.customer_name ? `${detail.customer_name} (${detail.external_customer_id})` : detail.external_customer_id;
     $('inbox-chat-header').innerHTML = `
       <div class="chat-header-info">
-        <h4>${esc(detail.external_customer_id)} &mdash; Order ${esc(detail.external_order_id)}</h4>
+        <h4>${esc(custDisplay)} &mdash; Order ${esc(detail.external_order_id)}</h4>
         <p>${esc(detail.recipient_phone || 'No phone')} &bull; Provider: <strong>${esc(detail.provider || 'SIMULATOR')}</strong></p>
       </div>
-      <div>${getBadgeHtml(detail.delivery_status)}</div>
+      <div class="chat-header-actions">
+        ${getBadgeHtml(detail.delivery_status)}
+        <button id="btn-toggle-profile" class="btn-toggle-profile ${state.isProfileOpen ? 'active' : ''}" 
+                onclick="toggleProfilePanel()" 
+                title="${state.isProfileOpen ? 'Hide customer profile' : 'Show customer profile'}"
+                aria-label="${state.isProfileOpen ? 'Hide customer profile' : 'Show customer profile'}"
+                aria-expanded="${state.isProfileOpen}">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <span class="btn-toggle-label">${state.isProfileOpen ? 'Hide Profile' : 'Profile'}</span>
+        </button>
+      </div>
     `;
+
+    const inboxContainer = $('inbox-container');
+    if (inboxContainer) {
+      inboxContainer.classList.toggle('profile-closed', !state.isProfileOpen);
+    }
 
     // Messages
     const msgs = detail.simulator_messages || [];
+    const provenanceBanner = `
+      <div class="chat-provenance-banner">
+        <div>
+          <strong>Delivered Order:</strong> <code>${esc(detail.external_order_id)}</code> &bull;
+          <strong>Purchased Items:</strong> ${(detail.source_items || []).map((i) => `<span class="tag-sku-purchased">${esc(i.sku_code)}</span>`).join('') || 'None'}
+        </div>
+        <div>
+          <span class="badge badge-simulated">POST-DELIVERY UPSELL</span>
+        </div>
+      </div>
+    `;
+
     if (!msgs || msgs.length === 0) {
       const canDispatch =
         detail.delivery_status === 'READY_FOR_DISPATCH' || detail.delivery_status === 'FAILED_RETRYABLE';
       $('inbox-chat-messages').innerHTML = `
+        ${provenanceBanner}
         <div class="empty-state">
           <h4>No Messages Sent Yet</h4>
           <p>Campaign status is <strong>${detail.delivery_status}</strong>.</p>
@@ -664,7 +808,7 @@ async function selectInboxCampaign(campaignId) {
         </div>
       `;
     } else {
-      $('inbox-chat-messages').innerHTML = msgs
+      $('inbox-chat-messages').innerHTML = provenanceBanner + msgs
         .map((m) => {
           const isOut = m.direction === 'OUTBOUND';
           const cards = m.recommendations_payload;
@@ -678,6 +822,7 @@ async function selectInboxCampaign(campaignId) {
                 <div class="rec-card-chat">
                   <div class="rec-card-title">${card.slot_number}. ${esc(card.product_name)}</div>
                   <div class="rec-card-sub">SKU: ${esc(card.product_code)}${card.unit_price ? ' &bull; ₹' + Number(card.unit_price).toFixed(2) : ''}</div>
+                  ${card.source_product_code ? `<div class="badge-lineage">Cross-sell for purchased <strong>${esc(card.source_product_code)}</strong> (Rank #${card.source_rank || '1'})</div>` : '<div class="badge-lineage">Personalized cross-sell for order</div>'}
                   <div class="rec-card-actions">
                     <button class="btn-card-action" onclick="sendInteraction('${detail.campaign_id}', 'VIEW_RECOMMENDATION', '${esc(card.product_code)}')">View Details</button>
                     <button class="btn-card-action" style="background:#dcfce7;border-color:#86efac;color:#166534;" onclick="sendInteraction('${detail.campaign_id}', 'INTERESTED', '${esc(card.product_code)}')">Interested</button>
@@ -719,31 +864,86 @@ async function selectInboxCampaign(campaignId) {
       $('inbox-chat-actions').innerHTML = `<span style="font-size:12px;color:#94a3b8;">Campaign is SUPPRESSED. Customer interactions are not permitted.</span>`;
     }
 
-    // Right Drawer Content
+    // Dynamic consent badge
+    let consentBadge = '<span class="badge badge-delivered">ACTIVE OPT-IN</span>';
+    if (detail.opted_out === true) {
+      consentBadge = '<span class="badge badge-failed">OPTED_OUT</span>';
+    } else if (detail.whatsapp_opt_in === false) {
+      consentBadge = '<span class="badge badge-suppressed">NO MARKETING CONSENT</span>';
+    }
+
+    // Right Drawer Content: Distinct sections for Purchased Items vs Recommendations
     $('inbox-right-drawer').innerHTML = `
-      <div class="drawer-section">
-        <h5>Customer Profile</h5>
-        <div class="detail-row"><span class="detail-label">Customer ID</span><span class="detail-val">${esc(detail.external_customer_id)}</span></div>
-        <div class="detail-row"><span class="detail-label">Phone</span><span class="detail-val">${esc(detail.recipient_phone || '—')}</span></div>
-        <div class="detail-row"><span class="detail-label">Consent State</span><span class="detail-val" style="color:#059669;font-weight:600;">ACTIVE OPT-IN</span></div>
+      <div class="drawer-header-row">
+        <div class="drawer-title-box">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <span>Customer &amp; Order Intelligence</span>
+        </div>
+        <button class="btn-close-drawer" onclick="toggleProfilePanel(false)" title="Hide customer profile" aria-label="Close profile panel">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
       </div>
 
       <div class="drawer-section">
-        <h5>Delivered Order</h5>
-        <div class="detail-row"><span class="detail-label">Order Ref</span><span class="detail-val">${esc(detail.external_order_id)}</span></div>
-        <div class="detail-row"><span class="detail-label">Items Count</span><span class="detail-val">${(detail.source_items || []).length} items</span></div>
-        <div style="margin-top:6px;">
+        <h5>Customer Profile</h5>
+        <div class="detail-row"><span class="detail-label">Full Name</span><span class="detail-val">${esc(detail.customer_name || '—')}</span></div>
+        <div class="detail-row"><span class="detail-label">Customer ID</span><span class="detail-val">${esc(detail.external_customer_id)}</span></div>
+        <div class="detail-row"><span class="detail-label">Phone</span><span class="detail-val">${esc(detail.recipient_phone || '—')}</span></div>
+        <div class="detail-row"><span class="detail-label">Consent State</span><span class="detail-val">${consentBadge}</span></div>
+      </div>
+
+      <div class="drawer-section">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+          <h5 style="margin:0;">Delivered Order Items</h5>
+          <span class="badge badge-purchased">PURCHASED (${(detail.source_items || []).length})</span>
+        </div>
+        <div class="detail-row"><span class="detail-label">Order Ref</span><span class="detail-val"><code>${esc(detail.external_order_id)}</code></span></div>
+        <p style="font-size:11px;color:#64748b;margin:6px 0;">Actual products bought in this order (source recommendation triggers):</p>
+        <div style="margin-top:4px;">
           ${(detail.source_items || [])
             .map(
               (i) =>
-                `<div style="font-size:11.5px;color:#475569;padding:2px 0;">&bull; <strong>${esc(i.sku_code)}</strong> x${i.quantity}</div>`
+                `<div style="font-size:11.5px;color:#334155;padding:3px 0;border-bottom:1px solid #f1f5f9;display:flex;justify-content:space-between;">
+                  <span><strong>${esc(i.sku_code)}</strong> &mdash; ${esc(i.product_name)}</span>
+                  <span style="font-weight:600;color:#0284c7;">x${i.quantity}</span>
+                </div>`
             )
-            .join('')}
+            .join('') || '<p class="text-muted">No line items.</p>'}
         </div>
       </div>
 
       <div class="drawer-section">
-        <h5>Campaign & Dispatch</h5>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+          <h5 style="margin:0;">Cross-Sell Recommendations</h5>
+          <span class="badge badge-rec">RECOMMENDED (${(detail.recommendation_cards || []).length})</span>
+        </div>
+        <p style="font-size:11px;color:#64748b;margin:4px 0 8px;">Algorithmic recommendations (already-purchased items strictly excluded):</p>
+        <div style="margin-top:4px;">
+          ${(detail.recommendation_cards || [])
+            .map(
+              (c) =>
+                `<div style="font-size:11.5px;color:#334155;padding:4px 0;border-bottom:1px solid #f1f5f9;">
+                  <div style="display:flex;justify-content:space-between;">
+                    <span style="font-weight:600;">${c.slot_number}. ${esc(c.product_name)}</span>
+                    <span style="color:#059669;font-weight:700;">${c.unit_price ? '₹' + c.unit_price.toFixed(2) : ''}</span>
+                  </div>
+                  <div style="font-size:10.5px;color:#64748b;">
+                    SKU: <code>${esc(c.product_code)}</code> &bull; Source: <code>${esc(c.source_product_code || '—')}</code> (Rank #${c.source_rank || '—'})
+                  </div>
+                </div>`
+            )
+            .join('') || '<p class="text-muted">No recommendations generated.</p>'}
+        </div>
+      </div>
+
+      <div class="drawer-section">
+        <h5>Campaign &amp; Dispatch</h5>
         <div class="detail-row"><span class="detail-label">Status</span><span class="detail-val">${getBadgeHtml(detail.delivery_status)}</span></div>
         <div class="detail-row"><span class="detail-label">Provider</span><span class="detail-val">${esc(detail.provider || 'SIMULATOR')}</span></div>
         <div class="detail-row"><span class="detail-label">Accepted</span><span class="detail-val">${formatShortTime(detail.provider_accepted_at) || '—'}</span></div>
@@ -758,6 +958,7 @@ async function selectInboxCampaign(campaignId) {
   } catch (err) {
     $('inbox-chat-header').innerHTML = `<h4>Error</h4>`;
     $('inbox-chat-messages').innerHTML = `<div class="empty-state"><p class="text-danger">Failed to load conversation: ${esc(err.message)}</p></div>`;
+    $('inbox-right-drawer').innerHTML = `<p class="text-danger" style="padding:16px;">Failed to load details: ${esc(err.message)}</p>`;
   }
 }
 window.selectInboxCampaign = selectInboxCampaign;
@@ -820,7 +1021,8 @@ async function loadOrdersTab() {
               <th>Customer</th>
               <th>Status</th>
               <th>Delivered At</th>
-              <th>Line Items</th>
+              <th>Purchased Items (Order Line Items)</th>
+              <th>Generated Cross-Sell Recommendations</th>
               <th>Campaign Status</th>
               <th>Created</th>
             </tr>
@@ -838,9 +1040,10 @@ async function loadOrdersTab() {
                 <td><span class="badge ${o.order_status === 'DELIVERED' ? 'badge-delivered' : 'badge-suppressed'}">${esc(o.order_status)}</span></td>
                 <td>${formatTime(o.delivered_at)}</td>
                 <td>
-                  <span style="font-size:12px;font-weight:600;color:#0284c7;">
-                    ${(o.items || []).map((i) => `${i.product_code} (x${i.quantity})`).join(', ') || 'No line items'}
-                  </span>
+                  ${(o.items || []).map((i) => `<span class="tag-sku-purchased" title="${esc(i.product_name || i.product_code)}">${esc(i.product_code)} (x${i.quantity})</span>`).join('') || '<span style="color:#94a3b8;font-size:11px;">No line items</span>'}
+                </td>
+                <td>
+                  ${(o.recommended_skus || []).map((sku) => `<span class="tag-sku-rec">${esc(sku)}</span>`).join('') || '<span style="color:#94a3b8;font-size:11px;">None</span>'}
                 </td>
                 <td>${o.campaign_status ? getBadgeHtml(o.campaign_status) : '<span style="color:#94a3b8;">No campaign</span>'}</td>
                 <td>${formatShortTime(o.created_at)}</td>
@@ -1131,5 +1334,7 @@ async function loadSettings() {
 // Initial Bootstrap on Page Load
 document.addEventListener('DOMContentLoaded', async () => {
   await loadProviderStatus();
-  switchView('overview');
+  const initialView = getViewFromUrl();
+  updateUrlForView(initialView, true);
+  switchView(initialView, false);
 });

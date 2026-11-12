@@ -69,6 +69,7 @@ class OrderListViewItem(BaseModel):
     delivered_at: datetime | None = None
     line_item_count: int = 0
     items: list[dict[str, Any]] = Field(default_factory=list)
+    recommended_skus: list[str] = Field(default_factory=list)
     campaign_id: int | None = None
     campaign_status: str | None = None
     created_at: datetime

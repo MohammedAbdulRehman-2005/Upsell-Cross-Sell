@@ -15,6 +15,10 @@ class CatalogueMetadataSource(StrEnum):
 class OrderStatus(StrEnum):
     """Lifecycle states of a customer order."""
 
+    PLACED = "PLACED"
+    CONFIRMED = "CONFIRMED"
+    PACKED = "PACKED"
+    OUT_FOR_DELIVERY = "OUT_FOR_DELIVERY"
     PENDING = "PENDING"
     PROCESSING = "PROCESSING"
     SHIPPED = "SHIPPED"
@@ -28,6 +32,7 @@ class WebhookEventType(StrEnum):
     ORDER_DELIVERED = "ORDER_DELIVERED"
     ORDER_STATUS_UPDATED = "ORDER_STATUS_UPDATED"
     WHATSAPP_STATUS_UPDATE = "WHATSAPP_STATUS_UPDATE"
+    WHATSAPP_INBOUND_MESSAGE = "WHATSAPP_INBOUND_MESSAGE"
 
 
 class WebhookProcessingStatus(StrEnum):

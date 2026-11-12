@@ -14,9 +14,11 @@ from fastapi.staticfiles import StaticFiles
 from app.api.routes.campaigns import router as campaigns_router
 from app.api.routes.dashboard import router as dashboard_router
 from app.api.routes.health import router as health_router
+from app.api.routes.storefront import router as storefront_router
 from app.api.routes.webhooks import router as webhooks_router
 from app.core.config import Settings, get_settings
 from app.core.logging import configure_logging
+from app.services.demo_delivery_worker import DemoDeliveryWorker
 
 
 def create_app(settings: Settings | None = None) -> FastAPI:
@@ -33,7 +35,13 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             active_settings.environment,
             active_settings.masked_database_uri,
         )
+        worker: DemoDeliveryWorker | None = None
+        if active_settings.demo_delivery_enabled:
+            worker = DemoDeliveryWorker(settings=active_settings)
+            worker.start()
         yield
+        if worker is not None:
+            await worker.stop()
         logger.info("Shutting down %s", active_settings.app_name)
 
     application = FastAPI(
@@ -65,19 +73,31 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     application.include_router(webhooks_router)
     application.include_router(campaigns_router)
     application.include_router(dashboard_router)
+    application.include_router(storefront_router)
 
     static_base = Path(__file__).resolve().parent / "static"
     simulator_dir = static_base / "simulator"
+    storefront_dir = static_base / "storefront"
     application.mount("/static", StaticFiles(directory=static_base), name="static-assets")
     application.mount("/simulator/static", StaticFiles(directory=simulator_dir), name="simulator-static")
+    if storefront_dir.exists():
+        application.mount("/storefront/static", StaticFiles(directory=storefront_dir), name="storefront-static")
 
     @application.get("/simulator", include_in_schema=False)
     def simulator_page() -> FileResponse:
         return FileResponse(simulator_dir / "index.html")
 
+    @application.get("/store", include_in_schema=False)
+    def storefront_page() -> FileResponse:
+        return FileResponse(storefront_dir / "index.html")
+
+    @application.get("/store/order/{order_id}", include_in_schema=False)
+    def storefront_tracking_page(order_id: str) -> FileResponse:
+        return FileResponse(storefront_dir / "index.html")
+
     @application.get("/", include_in_schema=False)
-    def root_redirect() -> RedirectResponse:
-        return RedirectResponse(url="/simulator")
+    def root_page() -> FileResponse:
+        return FileResponse(storefront_dir / "index.html")
     return application
 
 
