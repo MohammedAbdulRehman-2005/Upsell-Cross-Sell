@@ -75,7 +75,7 @@ class Settings(BaseSettings):
     db_echo: bool = Field(default=False)
 
     # CORS configuration
-    cors_origins: list[str] = Field(
+    cors_origins: str | list[str] = Field(
         default_factory=lambda: ["http://localhost:3000", "http://localhost:8000"],
         description="Allowed CORS origins.",
     )
@@ -115,7 +115,7 @@ class Settings(BaseSettings):
         default=SecretStr(""),
         description="Shared secret token verified via X-Webhook-Token header when order_webhook_auth_mode='shared_token_header'.",
     )
-    allowed_delivery_event_sources: list[str] = Field(
+    allowed_delivery_event_sources: str | list[str] = Field(
         default_factory=lambda: [
             "order_service",
             "logistics_webhook",
@@ -250,9 +250,28 @@ class Settings(BaseSettings):
             return value.strip().lower()
         return value
 
-    @field_validator("cors_origins", mode="before")
+    @field_validator("cors_origins", mode="after")
     @classmethod
     def parse_cors_origins(cls, value: str | list[str]) -> list[str]:
+        if isinstance(value, str):
+            cleaned = value.strip()
+            if not cleaned:
+                return []
+            if cleaned == "*":
+                return ["*"]
+            if cleaned.startswith("["):
+                import json
+
+                parsed = json.loads(cleaned)
+                if not isinstance(parsed, list):
+                    raise ValueError("CORS_ORIGINS JSON value must be a list of strings")
+                return [str(origin).strip() for origin in parsed if str(origin).strip()]
+            return [origin.strip() for origin in cleaned.split(",") if origin.strip()]
+        return value
+
+    @field_validator("allowed_delivery_event_sources", mode="after")
+    @classmethod
+    def parse_allowed_delivery_event_sources(cls, value: str | list[str]) -> list[str]:
         if isinstance(value, str):
             cleaned = value.strip()
             if not cleaned:
@@ -262,9 +281,9 @@ class Settings(BaseSettings):
 
                 parsed = json.loads(cleaned)
                 if not isinstance(parsed, list):
-                    raise ValueError("CORS_ORIGINS JSON value must be a list of strings")
-                return [str(origin).strip() for origin in parsed if str(origin).strip()]
-            return [origin.strip() for origin in cleaned.split(",") if origin.strip()]
+                    raise ValueError("ALLOWED_DELIVERY_EVENT_SOURCES JSON value must be a list of strings")
+                return [str(src).strip() for src in parsed if str(src).strip()]
+            return [src.strip() for src in cleaned.split(",") if src.strip()]
         return value
 
     @model_validator(mode="after")

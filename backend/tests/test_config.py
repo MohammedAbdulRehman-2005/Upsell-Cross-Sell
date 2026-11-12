@@ -61,12 +61,24 @@ def test_render_database_url_normalization() -> None:
     )
 
 
-def test_settings_cors_origins_parsing() -> None:
+def test_settings_cors_origins_parsing(monkeypatch: pytest.MonkeyPatch) -> None:
     from_csv = Settings(cors_origins="http://localhost:3000, https://app.example.com")
     assert from_csv.cors_origins == ["http://localhost:3000", "https://app.example.com"]
 
     from_json = Settings(cors_origins='["http://localhost:5173","http://localhost:8000"]')
     assert from_json.cors_origins == ["http://localhost:5173", "http://localhost:8000"]
+
+    from_wildcard = Settings(cors_origins="*")
+    assert from_wildcard.cors_origins == ["*"]
+
+    # Verify that setting CORS_ORIGINS=* via environment variable (as Render does) does not crash pydantic-settings
+    monkeypatch.setenv("CORS_ORIGINS", "*")
+    from_env = Settings()
+    assert from_env.cors_origins == ["*"]
+
+    monkeypatch.setenv("ALLOWED_DELIVERY_EVENT_SOURCES", "custom_source, logistics_hub")
+    from_sources = Settings()
+    assert from_sources.allowed_delivery_event_sources == ["custom_source", "logistics_hub"]
 
 
 def test_settings_invalid_environment_and_port_rejected() -> None:
