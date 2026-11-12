@@ -1,0 +1,29 @@
+services:
+  - type: web
+    name: plural-upsell-service
+    runtime: docker
+    plan: free
+    region: oregon
+    dockerfilePath: Dockerfile
+    dockerContext: .
+    healthCheckPath: /health/ready
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: APP_NAME
+        value: "Plural Health Upsell & Cross-Sell Service"
+      - key: WHATSAPP_PROVIDER
+        value: simulator
+      - key: DEMO_DELIVERY_ENABLED
+        value: "true"
+      - key: DEMO_DELIVERY_DELAY_SECONDS
+        value: "12"
+      - key: LOG_LEVEL
+        value: INFO
+      - key: CORS_ORIGINS
+        value: "*"
+      # DATABASE_URL:
+      # Paste your Render PostgreSQL "Internal Database URL" from plural-upsell-db
+      # e.g.: postgres://plural_user:PASSWORD@dpg-dbqsanrbc2fs73e9ko40-a/plural_upsell_db
+      - key: DATABASE_URL
+        sync: false

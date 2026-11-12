@@ -41,6 +41,9 @@ services:
       NORMALIZED_MAPPINGS_PATH: /app/data/normalized/product_mappings.json
     ports:
       - "${BACKEND_PORT:-8000}:8000"
+    volumes:
+      - ./backend:/app
+      - ./data:/app/data
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health/ready"]
       interval: 10s

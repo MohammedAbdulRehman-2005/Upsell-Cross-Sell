@@ -33,6 +33,34 @@ def test_settings_explicit_database_url_masking() -> None:
     assert settings.masked_database_uri == "postgresql+psycopg://custom_user:***@pg-host:5433/custom_db"
 
 
+def test_render_database_url_normalization() -> None:
+    """Render/Heroku inject postgres:// or postgresql:// without the driver dialect.
+
+    Verify that SQLAlchemy URI automatically normalizes them to postgresql+psycopg://.
+    """
+    # 1. postgres:// scheme (Render Internal URL format)
+    render_internal = Settings(
+        database_url="postgres://user_123:secret_pass@dpg-dbqsanrbc2fs73e9ko40-a:5432/plural_upsell_db"
+    )
+    assert render_internal.sqlalchemy_database_uri == (
+        "postgresql+psycopg://user_123:secret_pass@dpg-dbqsanrbc2fs73e9ko40-a:5432/plural_upsell_db"
+    )
+    assert render_internal.masked_database_uri == (
+        "postgresql+psycopg://user_123:***@dpg-dbqsanrbc2fs73e9ko40-a:5432/plural_upsell_db"
+    )
+
+    # 2. postgresql:// scheme with sslmode (Render External URL format)
+    render_external = Settings(
+        database_url="postgresql://user_123:secret_pass@dpg-dbqsanrbc2fs73e9ko40-a.oregon-postgres.render.com/plural_upsell_db?sslmode=require"
+    )
+    assert render_external.sqlalchemy_database_uri == (
+        "postgresql+psycopg://user_123:secret_pass@dpg-dbqsanrbc2fs73e9ko40-a.oregon-postgres.render.com/plural_upsell_db?sslmode=require"
+    )
+    assert render_external.masked_database_uri == (
+        "postgresql+psycopg://user_123:***@dpg-dbqsanrbc2fs73e9ko40-a.oregon-postgres.render.com/plural_upsell_db?sslmode=require"
+    )
+
+
 def test_settings_cors_origins_parsing() -> None:
     from_csv = Settings(cors_origins="http://localhost:3000, https://app.example.com")
     assert from_csv.cors_origins == ["http://localhost:3000", "https://app.example.com"]

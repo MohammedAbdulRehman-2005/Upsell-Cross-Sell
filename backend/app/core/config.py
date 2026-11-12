@@ -285,7 +285,14 @@ class Settings(BaseSettings):
     def sqlalchemy_database_uri(self) -> str:
         """Return the unmasked SQLAlchemy connection URI for engine creation."""
         if self.database_url is not None and self.database_url.get_secret_value().strip():
-            return self.database_url.get_secret_value().strip()
+            raw_url = self.database_url.get_secret_value().strip()
+            # Render/Heroku provide postgres:// or postgresql:// without the driver dialect.
+            # Normalize to postgresql+psycopg:// so SQLAlchemy uses psycopg (v3).
+            if raw_url.startswith("postgres://"):
+                return "postgresql+psycopg://" + raw_url[len("postgres://"):]
+            if raw_url.startswith("postgresql://") and not raw_url.startswith("postgresql+"):
+                return "postgresql+psycopg://" + raw_url[len("postgresql://"):]
+            return raw_url
         raw_password = self.postgres_password.get_secret_value()
         encoded_user = quote_plus(self.postgres_user)
         encoded_password = quote_plus(raw_password)
@@ -298,18 +305,13 @@ class Settings(BaseSettings):
     @property
     def masked_database_uri(self) -> str:
         """Return a safe, password-redacted database URI for logs and diagnostics."""
-        if self.database_url is not None and self.database_url.get_secret_value().strip():
-            uri = self.database_url.get_secret_value().strip()
-            if "@" in uri and "://" in uri:
-                scheme_and_creds, host_part = uri.split("@", 1)
-                scheme, _, creds = scheme_and_creds.partition("://")
-                user = creds.split(":", 1)[0] if ":" in creds else creds
-                return f"{scheme}://{user}:***@{host_part}"
-            return uri
-        return (
-            f"postgresql+psycopg://{self.postgres_user}:***"
-            f"@{self.postgres_host}:{self.postgres_port}/{self.postgres_db}"
-        )
+        uri = self.sqlalchemy_database_uri
+        if "@" in uri and "://" in uri:
+            scheme_and_creds, host_part = uri.split("@", 1)
+            scheme, _, creds = scheme_and_creds.partition("://")
+            user = creds.split(":", 1)[0] if ":" in creds else creds
+            return f"{scheme}://{user}:***@{host_part}"
+        return uri
 
 
 @lru_cache(maxsize=1)

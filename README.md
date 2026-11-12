@@ -104,3 +104,11 @@ See [docs/stage8_storefront_and_meta_journey.md](docs/stage8_storefront_and_meta
   - `HELP` / `SUPPORT`: Dispatches customer support assistance information.
 - **161 Automated Tests**: 100% test pass rate on host and Docker.
 
+## Deployment — Public Deployment on Render
+See [docs/render_deployment_guide.md](docs/render_deployment_guide.md).
+- **Zero-config Docker deployment**: Contains root `Dockerfile`, `render.yaml`, and container entrypoint `backend/entrypoint.sh`.
+- **Automatic Migration & Seeding**: Runs `alembic upgrade head` and seeds all 70 products and 420 recommendation mappings idempotently on startup.
+- **Dynamic Port Binding**: Automatically adapts to Render's dynamic `$PORT` environment variable.
+- **Dialect Normalization**: Automatically normalizes Render PostgreSQL URIs (`postgres://` / `postgresql://`) to `postgresql+psycopg://`.
+
+
