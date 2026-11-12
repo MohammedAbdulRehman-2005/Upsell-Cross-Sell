@@ -114,9 +114,10 @@ def test_admin_dashboard_header_controls(client: TestClient) -> None:
     assert 'id="provider-indicator-pill"' in html
     assert 'id="btn-refresh"' in html
 
-    # Shortcut back to Storefront
+    # Shortcut back to Store
     assert 'href="/"' in html or 'href="/store"' in html
-    assert "Storefront" in html
+    assert "Store" in html
+    assert 'id="btn-topbar-store"' in html
 
 
 def test_provider_status_api_and_mode_clarity(client: TestClient) -> None:

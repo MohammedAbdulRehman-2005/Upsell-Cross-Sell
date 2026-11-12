@@ -233,6 +233,9 @@ async function loadProviderStatus() {
     state.providerStatus = status;
 
     const el = $('provider-indicator-pill');
+    if (el) {
+      el.style.display = 'none';
+    }
     const sidebarBadge = $('sidebar-inbox-badge');
 
     if (status.active_provider.includes('SIMULATOR')) {
