@@ -163,6 +163,26 @@ def list_orders(
             if c.order_id not in campaigns_by_order:
                 campaigns_by_order[c.order_id] = c
 
+    # Collect all SKU codes across order line items and campaign recommendations to resolve product names from catalogue
+    all_sku_codes: set[str] = set()
+    for o in orders:
+        for item in o.line_items:
+            if item.product_code:
+                all_sku_codes.add(item.product_code.strip())
+    for camp in campaigns_by_order.values():
+        for sku in (camp.recommended_skus or []):
+            if sku:
+                all_sku_codes.add(sku.strip())
+
+    product_names_by_sku: dict[str, str] = {}
+    if all_sku_codes:
+        p_stmt = select(Product.product_code, Product.product_name).where(
+            Product.product_code.in_(all_sku_codes)
+        )
+        for p_code, p_name in session.execute(p_stmt).all():
+            if p_name and p_name.strip():
+                product_names_by_sku[p_code] = p_name.strip()
+
     results: list[OrderListViewItem] = []
     for order in orders:
         camp = campaigns_by_order.get(order.id)
@@ -170,10 +190,18 @@ def list_orders(
             {
                 "line_index": item.line_index,
                 "product_code": item.product_code,
-                "product_name": item.product_name,
+                "product_name": item.product_name or product_names_by_sku.get(item.product_code, item.product_code),
                 "quantity": item.quantity,
             }
             for item in sorted(order.line_items, key=lambda x: x.line_index)
+        ]
+        rec_skus = list(camp.recommended_skus or []) if camp else []
+        recommended_products_data = [
+            {
+                "product_code": sku,
+                "product_name": product_names_by_sku.get(sku, sku),
+            }
+            for sku in rec_skus
         ]
         results.append(
             OrderListViewItem(
@@ -186,7 +214,8 @@ def list_orders(
                 delivered_at=order.delivered_at,
                 line_item_count=len(line_items_data),
                 items=line_items_data,
-                recommended_skus=list(camp.recommended_skus or []) if camp else [],
+                recommended_skus=rec_skus,
+                recommended_products=recommended_products_data,
                 campaign_id=camp.id if camp else None,
                 campaign_status=str(camp.delivery_status) if camp else None,
                 created_at=order.created_at,

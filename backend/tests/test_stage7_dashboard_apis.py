@@ -138,6 +138,31 @@ def test_orders_list_api(client: TestClient, db_session: Session) -> None:
     assert o["line_item_count"] == 1
     assert o["campaign_status"] == "READY_FOR_DISPATCH"
     assert o["items"][0]["product_code"] == "SRC-MED-01"
+    assert o["items"][0]["product_name"] == "Ayurvedic Digestive Tonic"
+    assert o["items"][0]["quantity"] == 2
+    assert "recommended_products" in o
+    assert len(o["recommended_products"]) == 1
+    assert o["recommended_products"][0]["product_code"] == "TGT-MED-01"
+    assert o["recommended_products"][0]["product_name"] == "Probiotic Capsules"
+
+
+def test_orders_list_api_resolves_product_name_from_catalogue_when_missing(
+    client: TestClient, db_session: Session
+) -> None:
+    """Verify data integrity: line item product name is resolved from products table when order_line_items.product_name is None."""
+    _setup_stage7_sample_data(db_session)
+    # Set product_name on order_line_item to None
+    line_item = db_session.query(OrderLineItem).first()
+    assert line_item is not None
+    line_item.product_name = None
+    db_session.commit()
+
+    resp = client.get("/api/v1/orders")
+    assert resp.status_code == 200
+    orders = resp.json()
+    assert len(orders) == 1
+    assert orders[0]["items"][0]["product_name"] == "Ayurvedic Digestive Tonic"
+    assert orders[0]["recommended_products"][0]["product_name"] == "Probiotic Capsules"
 
 
 def test_products_list_and_search_api(client: TestClient, db_session: Session) -> None:

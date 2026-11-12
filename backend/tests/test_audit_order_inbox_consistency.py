@@ -427,10 +427,18 @@ def test_orders_api_separates_purchased_items_and_recommendations(db_session: Se
     # Purchased items
     assert len(ord_a["items"]) == 2
     assert ord_a["items"][0]["product_code"] == "SKU-A1"
+    assert ord_a["items"][0]["product_name"] == "Face Wash A1"
     assert ord_a["items"][1]["product_code"] == "SKU-A2"
+    assert ord_a["items"][1]["product_name"] == "Moisturizer A2"
 
-    # Recommended SKUs
+    # Recommended SKUs & Products
     assert ord_a["recommended_skus"] == ["REC-A1", "REC-A2"]
+    assert len(ord_a["recommended_products"]) == 2
+    assert ord_a["recommended_products"][0]["product_code"] == "REC-A1"
+    assert ord_a["recommended_products"][0]["product_name"] == "Serum Rec A1"
+    assert ord_a["recommended_products"][1]["product_code"] == "REC-A2"
+    assert ord_a["recommended_products"][1]["product_name"] == "Cream Rec A2"
+
     # Ensure no overlap
     purchased_set = {i["product_code"] for i in ord_a["items"]}
     rec_set = set(ord_a["recommended_skus"])

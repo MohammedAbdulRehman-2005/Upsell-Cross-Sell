@@ -1043,10 +1043,40 @@ async function loadOrdersTab() {
                 <td><span class="badge ${o.order_status === 'DELIVERED' ? 'badge-delivered' : 'badge-suppressed'}">${esc(o.order_status)}</span></td>
                 <td>${formatTime(o.delivered_at)}</td>
                 <td>
-                  ${(o.items || []).map((i) => `<span class="tag-sku-purchased" title="${esc(i.product_name || i.product_code)}">${esc(i.product_code)} (x${i.quantity})</span>`).join('') || '<span style="color:#94a3b8;font-size:11px;">No line items</span>'}
+                  ${(o.items && o.items.length > 0)
+                    ? `<div class="product-item-stack">
+                        ${o.items.map((i) => `
+                          <div class="product-item-chip purchased" title="SKU: ${esc(i.product_code)} &bull; Quantity: ${i.quantity}">
+                            <div class="product-name-row">
+                              <span class="product-primary-name">${esc(i.product_name || i.product_code)}</span>
+                              <span class="product-qty-tag">&times;${i.quantity}</span>
+                            </div>
+                            <span class="product-secondary-sku">${esc(i.product_code)}</span>
+                          </div>
+                        `).join('')}
+                      </div>`
+                    : '<span style="color:#94a3b8;font-size:11px;">No line items</span>'
+                  }
                 </td>
                 <td>
-                  ${(o.recommended_skus || []).map((sku) => `<span class="tag-sku-rec">${esc(sku)}</span>`).join('') || '<span style="color:#94a3b8;font-size:11px;">None</span>'}
+                  ${(() => {
+                    const recs = (o.recommended_products && o.recommended_products.length > 0)
+                      ? o.recommended_products
+                      : (o.recommended_skus || []).map((sku) => ({ product_code: sku, product_name: sku }));
+                    if (!recs || recs.length === 0) {
+                      return '<span style="color:#94a3b8;font-size:11px;">None</span>';
+                    }
+                    return `<div class="product-item-stack">
+                      ${recs.map((r, idx) => `
+                        <div class="product-item-chip recommendation" title="Rank #${idx + 1} &bull; SKU: ${esc(r.product_code)}">
+                          <div class="product-name-row">
+                            <span class="product-primary-name"><span class="product-rank-badge">#${idx + 1}</span>${esc(r.product_name || r.product_code)}</span>
+                          </div>
+                          <span class="product-secondary-sku">${esc(r.product_code)}</span>
+                        </div>
+                      `).join('')}
+                    </div>`;
+                  })()}
                 </td>
                 <td>${o.campaign_status ? getBadgeHtml(o.campaign_status) : '<span style="color:#94a3b8;">No campaign</span>'}</td>
                 <td>${formatShortTime(o.created_at)}</td>

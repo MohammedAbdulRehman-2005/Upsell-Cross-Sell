@@ -667,6 +667,97 @@ table.data-table tr:hover td {
   font-family: var(--font-mono);
 }
 
+/* Product Item Stacks and Chips (Orders & Customers View) */
+.product-item-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 180px;
+  max-width: 280px;
+}
+
+.product-item-chip {
+  padding: 5px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  line-height: 1.3;
+  transition: all 0.15s ease;
+  box-sizing: border-box;
+}
+
+.product-item-chip.purchased {
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  color: #1e293b;
+}
+
+.product-item-chip.purchased:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+}
+
+.product-item-chip.recommendation {
+  background: #f0fdf4;
+  border: 1px solid #86efac;
+  color: #166534;
+}
+
+.product-item-chip.recommendation:hover {
+  background: #dcfce7;
+  border-color: #4ade80;
+}
+
+.product-name-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.product-primary-name {
+  font-weight: 600;
+  color: #0f172a;
+  word-break: break-word;
+}
+
+.product-item-chip.recommendation .product-primary-name {
+  color: #14532d;
+}
+
+.product-qty-tag {
+  font-size: 11px;
+  font-weight: 700;
+  color: #334155;
+  background: #e2e8f0;
+  padding: 1px 5px;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+
+.product-rank-badge {
+  font-size: 10px;
+  font-weight: 700;
+  background: #bbf7d0;
+  color: #166534;
+  padding: 1px 4px;
+  border-radius: 3px;
+  margin-right: 4px;
+  display: inline-block;
+}
+
+.product-secondary-sku {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: #64748b;
+  margin-top: 2px;
+  letter-spacing: 0.2px;
+}
+
+.product-item-chip.recommendation .product-secondary-sku {
+  color: #15803d;
+}
+
 /* --------------------------------------------------------------------------
    Filter & Search Toolbar
    -------------------------------------------------------------------------- */
